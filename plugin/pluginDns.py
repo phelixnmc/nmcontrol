@@ -55,6 +55,7 @@ class pluginDns(plugin.PluginThread):
 		'getIp6':	[1, 1, '<domain>', 'Get a list of IPv6 for the domain'],
 		'getOnion':	[1, 1, '<domain>', 'Get the .onion for the domain'],
 		'getI2p':	[1, 1, '<domain>', 'Get the i2p config for the domain'],
+		'getI2p_b32':	[1, 1, '<domain>', 'Get the i2p base32 config for the domain'],
 		'getFreenet':		[1, 1, '<domain>', 'Get the freenet config for the domain'],
 		'getFingerprint':	[1, 1, '<domain>', 'Get the sha1 of the certificate for the domain (deprecated)'],
 		'getTlsFingerprint': [1, 3, '<domain> <protocol> <port>', 'Get the TLS information for the domain'],
@@ -112,6 +113,9 @@ class pluginDns(plugin.PluginThread):
 
 	def getI2p(self, domain):
 		return self._getRecordForRPC(domain, 'getI2p')
+		
+	def getI2p_b32(self, domain):
+		return self._getRecordForRPC(domain, 'getI2p_b32')
 
 	def getFreenet(self, domain):
 		return self._getRecordForRPC(domain, 'getFreenet')
