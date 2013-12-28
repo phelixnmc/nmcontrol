@@ -86,8 +86,40 @@ class pluginDns(plugin.PluginThread):
 		return False
 
 	def _getRecordForRPC(self, domain, recType):
+		
+		# Handle explicit resolver
+		if domain.endswith('_ip4.bit'):
+			if not (recType in ['getIp4', 'getNS', 'getTranslate', 'getFingerprint', 'getTls']): #ToDo: support translate
+				return '[]'
+			domain = domain[:-8] + 'bit'
+		if domain.endswith('_ip6.bit'):
+			if not recType in ['getIp6', 'getNS', 'getTranslate', 'getFingerprint', 'getTls']: #ToDo: support translate
+				return '[]'
+			domain = domain[:-8] + 'bit'
+		if domain.endswith('_ip.bit'):
+			if not recType in ['getIp4', 'getIp6', 'getNS', 'getTranslate', 'getFingerprint', 'getTls']: #ToDo: support translate
+				return '[]'
+			domain = domain[:-7] + 'bit'
+		if domain.endswith('_tor.bit'):
+			if not recType in ['getOnion', 'getFingerprint', 'getTls']: #ToDo: support translate
+				return '[]'
+			domain = domain[:-8] + 'bit'
+		if domain.endswith('_i2p.bit'):
+			if not recType in ['getI2p', 'getI2p_b32', 'getFingerprint', 'getTls']: #ToDo: support translate
+				return '[]'
+			domain = domain[:-8] + 'bit'
+		if domain.endswith('_fn.bit'):
+			if not recType in ['getFreenet', 'getFingerprint', 'getTls']: #ToDo: support translate
+				return '[]'
+			domain = domain[:-7] + 'bit'
+		if domain.endswith('_anon.bit'):
+			if not recType in ['getOnion', 'getI2p', 'getI2p_b32', 'getFreenet', 'getFingerprint', 'getTls']: #ToDo: support translate
+				return '[]'
+			domain = domain[:-9] + 'bit'
+		
 		result = dnsResult()
 		self._resolve(domain, recType, result)
+		
 		return result.toJsonForRPC()
 
 	def getIp4(self, domain):
@@ -95,6 +127,12 @@ class pluginDns(plugin.PluginThread):
 		# if we got an NS record because there is no IP we need to ask the NS server for the IP
 		if self.conf['disable_ns_lookups'] != '1':
 			if "ns" in result:
+				
+				if(domain.endswith('_ip4.bit')):
+					domain = domain[:-8] + 'bit'
+				if(domain.endswith('_ip.bit')):
+					domain = domain[:-7] + 'bit'
+				
 				result = '["'+self._getIPv4FromNS(domain)+'"]'
 
 		return result
@@ -104,6 +142,12 @@ class pluginDns(plugin.PluginThread):
 		# if we got an NS record because there is no IP we need to ask the NS server for the IP
 		if self.conf['disable_ns_lookups'] != '1':
 			if "ns" in result:
+				
+				if(domain.endswith('_ip6.bit')):
+					domain = domain[:-8] + 'bit'
+				if(domain.endswith('_ip.bit')):
+					domain = domain[:-7] + 'bit'
+					
 				result = '["'+self._getIPv6FromNS(domain)+'"]'
 
 		return result
