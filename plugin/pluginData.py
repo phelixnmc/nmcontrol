@@ -101,6 +101,12 @@ class pluginData(plugin.PluginThread):
 		if name not in self.data or self.data[name]['expires_at'] < time.time():
 			error, data = self.update.getName(name)
 			if error is None:
+				
+				if 'expired' in data and data['expired']:
+					if app['debug']:
+						print name, 'is expired in the blockchain.'
+					return False
+				
 				data['expires_at'] = int(time.time() + self.conf['update.freq'])
 				self.data[name] = data
 
