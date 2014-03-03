@@ -57,8 +57,11 @@ class pluginDns(plugin.PluginThread):
 		'getI2p':	[1, 1, '<domain>', 'Get the i2p config for the domain'],
 		'getFreenet':		[1, 1, '<domain>', 'Get the freenet config for the domain'],
 		'getFingerprint':	[1, 1, '<domain>', 'Get the sha1 of the certificate for the domain (deprecated)'],
-		'getTlsFingerprint': [1, 3, '<domain> <protocol> <port>', 'Get the TLS information for the domain'],
-		'getNS':	[1, 1, '<domain>', 'Get a list of NS for the domain'],
+		'getTlsFingerprint':	[1, 3, '<domain> <protocol> <port>', 'Get the TLS information for the domain'],
+		'getNS':		[1, 1, '<domain>', 'Get a list of NS for the domain'],
+		'verifyFingerprint':	[1, 2, '<domain> <fingerprint>',
+					 'Verify if the fingerprint is'
+					 ' acceptable for the domain'],
 	}
 	handlers = []
 
@@ -118,6 +121,29 @@ class pluginDns(plugin.PluginThread):
 
 	def getFingerprint(self, domain):
 		return self._getRecordForRPC(domain, 'getFingerprint')
+
+	def verifyFingerprint (self, domain, fpr):
+		allowable = self.getFingerprint (domain)
+		try:	
+			allowable = json.loads (allowable)
+		except:
+			if app['debug']: traceback.print_exc ()
+			return False
+
+		if not isinstance (allowable, list):
+			if app['debug']:
+				print "Fingerprint record", allowable, \
+				      "is not a list"
+			return False
+
+		fpr = self._sanitiseFingerprint (fpr)
+		for a in allowable:
+			if self._sanitiseFingerprint (a) == fpr:
+				return True
+
+		if app['debug']:
+			print "No acceptable fingerprint found."
+		return False
 
 	def getTlsFingerprint(self, domain, protocol, port):
 		#return tls data for the queried FQDN, or the first includeSubdomain tls record
@@ -215,3 +241,13 @@ class pluginDns(plugin.PluginThread):
 					return tls
 			except:
 				continue
+
+	# Sanitise a fingerprint for comparison.  This makes it
+	# all upper-case and removes colons and spaces.
+	def _sanitiseFingerprint (self, fpr):
+		#fpr = fpr.translate (None, ': ')
+		fpr = fpr.replace (":", "")
+		fpr = fpr.replace (" ", "")
+		fpr = fpr.upper ()
+
+		return fpr
