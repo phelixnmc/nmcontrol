@@ -94,7 +94,9 @@ def main():
             return
 
     # daemon mode
-    if int(app['plugins']['main'].conf['daemon']) == 1:
+    if os.name == "nt":  # MS Windows
+        print "Daemon mode not possible on MS Windows."
+    elif int(app['plugins']['main'].conf['daemon']) == 1:
         print "Entering background mode"
         import daemonize
         retCode = daemonize.createDaemon()
