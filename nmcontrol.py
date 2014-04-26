@@ -15,12 +15,16 @@ def main():
     app['conf'] = ConfigParser.SafeConfigParser()
     app['path'] = {}
     app['path']['app'] = os.path.dirname(os.path.realpath(__file__)) + os.sep
-    app['path']['conf'] = app['path']['app'] + os.sep + 'conf' + os.sep
 
     # add import path
     sys.path.append(app['path']['app'] + 'lib')
     sys.path.append(app['path']['app'] + 'plugin')
     sys.path.append(app['path']['app'] + 'service')
+
+    # add conf path
+    import platformDep
+    app['path']['conf'] = os.path.join(platformDep.getNmcontrolDir(),
+                                       'conf') + os.sep
 
     import common
     common.app = app
