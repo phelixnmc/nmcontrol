@@ -17,7 +17,7 @@ import asyncore
 # is important to prevent spurious results from lost packets, and malicious
 # cache poisoning.  This doesn't matter if you are behind a caching nameserver
 # or your app is a primary DNS server only. To install your own generator,
-# replace DNS.Base.random.  SystemRandom uses /dev/urandom or similar source.  
+# replace DNS.Base.random.  SystemRandom uses /dev/urandom or similar source.
 #
 try:
   from random import SystemRandom
@@ -44,7 +44,7 @@ def ParseResolvConf(resolv_path="/etc/resolv.conf"):
         if not line or line[0]==';' or line[0]=='#':
             continue
         fields=string.split(line)
-        if len(fields) < 2: 
+        if len(fields) < 2:
             continue
         if fields[0]=='domain' and len(fields) > 1:
             defaults['domain']=fields[1]
@@ -161,7 +161,7 @@ class DnsRequest:
                 source_port = random.randint(1024,65535)
                 self.s.bind(('', source_port))
                 break
-            except socket.error, msg: 
+            except socket.error, msg:
                 # Error 98, 'Address already in use'
                 if msg[0] != 98: raise
 
