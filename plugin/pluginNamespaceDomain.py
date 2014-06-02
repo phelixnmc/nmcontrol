@@ -19,6 +19,7 @@ class pluginNamespaceDomain(plugin.PluginThread):
         'getIp6'    : 'ip6',
         'getOnion'    : 'tor',
         'getI2p'    : 'i2p',
+        'getI2p_b32'    : 'i2p_b32',
         'getFreenet'    : 'freenet',
         'getFingerprint': 'fingerprint',
         'getTls': 'tls',
@@ -100,10 +101,22 @@ class pluginNamespaceDomain(plugin.PluginThread):
                 result.add_raw(domain, recType, data[recType])
                 return
 
+        if recType == "i2p_b32":
+            if "i2p" in data:
+                if "b32" in data["i2p"]:
+                    result.add(domain, recType, data["i2p"]["b32"])
+                    return True
+            return False
+
         # record found in data
         if recType in data:
-            result.add(domain, recType, data[recType])
-            return True
+            if recType == "i2p_b32":
+                if "b32" in data["i2p"]:
+                    result.add(domain, recType, data["i2p"]["b32"])
+                    return True
+            else:
+                result.add(domain, recType, data[recType])
+                return True
 
         # legacy compatibility with ip not in an "ip" record
         if recType == 'ip' and ( type(data) == str or type(data) is unicode ):
