@@ -23,8 +23,7 @@ def main():
 
     # add conf path
     import platformDep
-    app['path']['conf'] = os.path.join(platformDep.getNmcontrolDir(),
-                                       'conf') + os.sep
+    app['path']['conf'] = os.path.join(platformDep.getNmcontrolDir(), 'conf') + os.sep
 
     import common
     common.app = app

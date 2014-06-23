@@ -8,12 +8,13 @@ def getNamecoinDir():
         return os.path.join(os.environ['APPDATA'], "Namecoin")
     return os.path.expanduser("~/.namecoin")
 
-def getNmcontrolDir():  # may be overwritten in nmcontrol.py
-    if platform.system() == "Darwin":
+def getNmcontrolDir():
+    if platform.system() == "Darwin":  # Mac OS X
         return os.path.expanduser("~/Library/Application Support/Nmcontrol")
-    elif platform.system() == "Windows":
+    elif platform.system() == "Windows":  # MS Windows
         return os.path.join(os.environ['APPDATA'], "Nmcontrol")
 
+    # Linux
     try:
         st = os.stat('/var/lib/nmcontrol')
         haspermission = bool(st.st_mode & stat.S_IRGRP)
