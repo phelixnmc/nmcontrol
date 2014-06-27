@@ -63,6 +63,7 @@ def main():
                     print "Exception when loading "+modType, module, ":", e
 
     # parse command line options
+    # Note: There should not be plugins and services with the same name    
     (options, app['args']) = app['parser'].parse_args()
     if app['debug']: print "Cmdline args:", app['args']
     if app['debug']: print "Cmdline options:", options
