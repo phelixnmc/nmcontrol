@@ -76,7 +76,7 @@ def main():
                 tmp.remove(module)
                 if module in app['plugins']:
                     app['plugins'][module].conf['.'.join(tmp)] = value
-                elif module in app['services']:
+                if module in app['services']:
                     app['services'][module].conf['.'.join(tmp)] = value
 
     ###### Act as client : send rpc request ######
