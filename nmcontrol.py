@@ -63,6 +63,7 @@ def main():
                     print "Exception when loading "+modType, module, ":", e
 
     # parse command line options
+    # Note: There should not be plugins and services with the same name    
     (options, app['args']) = app['parser'].parse_args()
     if app['debug']: print "Cmdline args:", app['args']
     if app['debug']: print "Cmdline options:", options
@@ -76,7 +77,7 @@ def main():
                 tmp.remove(module)
                 if module in app['plugins']:
                     app['plugins'][module].conf['.'.join(tmp)] = value
-                elif module in app['services']:
+                if module in app['services']:
                     app['services'][module].conf['.'.join(tmp)] = value
 
     ###### Act as client : send rpc request ######
