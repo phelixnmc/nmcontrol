@@ -37,7 +37,7 @@ It can currently :
 Documentation
 =============
 
-doc/TODO.md
+[doc/TODO.md](doc/TODO.md)
 
-doc/INSTALL.md
+[doc/INSTALL.md](doc/INSTALL.md)
 
