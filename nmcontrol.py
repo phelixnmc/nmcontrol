@@ -23,7 +23,12 @@ def main():
 
     # add conf path
     import platformDep
-    app['path']['conf'] = os.path.join(platformDep.getNmcontrolDir(), 'conf') + os.sep
+    path = os.path.join(platformDep.getNmcontrolDir(), 'conf') + os.sep
+    for argv in sys.argv:
+        if argv.startswith("--confdir=") or argv.startswith("--main.confdir="):
+            path = argv.split("=")[1]
+            path = os.path.realpath(path) + os.sep
+    app['path']['conf'] = path
 
     import common
     common.app = app
@@ -67,8 +72,6 @@ def main():
 
     # parse command line options
     (options, app['args']) = app['parser'].parse_args()
-    if app['debug']: print "Cmdline args:", app['args']
-    if app['debug']: print "Cmdline options:", options
     for option, value in vars(options).items():
         if value is not None:
             tmp = option.split('.')

@@ -8,6 +8,7 @@ class pluginMain(plugin.PluginThread):
         'start':    ['Launch at startup', (1, 0)[platform.system() == 'Windows']],
         'debug':    ['Debug mode', 0, '<0|1>'],
         'daemon':    ['Background mode', 1, '<0|1>'],
+        'confdir':    ['Configuration file directory', "<system conf dir>"],
         #'plugins':    ['Load only those plugins', 'main,data,rpc'],
     }
 
