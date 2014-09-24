@@ -63,7 +63,7 @@ def main():
                     print "Exception when loading "+modType, module, ":", e
 
     # parse command line options
-    # Note: There should not be plugins and services with the same name    
+    # Note: There should not be plugins and services with the same name
     (options, app['args']) = app['parser'].parse_args()
     if app['debug']: print "Cmdline args:", app['args']
     if app['debug']: print "Cmdline options:", options
@@ -113,6 +113,13 @@ def main():
                 plugins_started.append(app['plugins'][plugin].name)
     print "Plugins started :", ', '.join(plugins_started)
 
+    # bail without systray for GUI people
+    if not "systray" in plugins_started:
+        import __main__
+        if "nmcontrolwin.pyw" in __main__.__file__:
+            raise Exception("Systray start failed. Get details by running from the command line.\n" +
+                                  "Note: Windows systray needs Python Win32 Extensions.")
+
     #services_started = []
     #for service in app['services']:
     #    if app['services'][service].running:
@@ -131,4 +138,3 @@ def main():
 
 if __name__=='__main__':
     main()
-
