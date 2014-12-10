@@ -7,14 +7,14 @@ import os.path
 
 import jsonparser
 
-def render(baseUrl, postData=None, queryComponents=None, jsonData={}):
+def render(baseUrl, queryComponents=None, jsonData={}):
     ht = markup.page()
 
     currentPage = "main"
     if queryComponents and queryComponents.has_key("p") and queryComponents["p"][0] in htheader.menuItems:
         currentPage = queryComponents["p"][0]  # why list?
 
-    title = "ACME CORP"
+    title = "NMControl Name Browser"
     styles = (baseUrl + '/static/style_v01.css')
 
     ht.init(title=title, css=styles)
@@ -28,22 +28,19 @@ def render(baseUrl, postData=None, queryComponents=None, jsonData={}):
         #ht.add("currentPage: " + str(currentPage));ht.br()
         #ht.br()
 
-        if jsonData:
-            parser = jsonparser.Parser(spaceChar="&nbsp;")
-            text = parser.parse(jsonData)
-            print text
-            text = str(text.replace("\n", "<br>"))
-            ht.add("text");ht.br();ht.br()
-
-        with ht.form(method="post"):
+        with ht.form(method="get"):
             #ht.add("File:")
             #ht.input(type_="file", name="datafile", size="40")
             #ht.br()
             ht.input(type_="text", name="name", size="140")
             ht.input(type_="submit", name="gen", value="name_show")#, size=40, style="width:100px;float:right;margin-right:-1px")
 
-        ht.add("postData: " + str(postData));ht.br();ht.br()
-        ht.add("getData: " + str(queryComponents));ht.br();ht.br()
+        if jsonData:
+            parser = jsonparser.Parser(spaceChar="&nbsp;")
+            text = parser.parse(jsonData)
+            print "text:\n", text
+            text = str(text.replace("\n", "<br>"))
+            ht.add(text);ht.br();ht.br()
 
     return str(ht)
 
