@@ -48,7 +48,7 @@ def main():
 
     # init service & plugins
     for modType in ['service', 'plugin']:
-        modules = dircache.listdir(modType)
+        modules = dircache.listdir(os.path.join(app['path']['app'], modType))
         if modType == 'plugin': modules.remove('pluginMain.py')
         for module in modules:
             if re.match("^"+modType+".*.py$", module):
