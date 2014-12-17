@@ -25,7 +25,8 @@ class pluginRpc(plugin.PluginThread):
             self.s.listen(1)
             while self.running:
                 try:
-                    c = rpcClientThread(self.s.accept(), app)
+                    acc = self.s.accept()
+                    c = rpcClientThread(acc, app)
                     c.start()
                     self.threads.append(c)
                 except Exception as e:
