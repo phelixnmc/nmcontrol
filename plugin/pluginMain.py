@@ -27,11 +27,13 @@ class pluginMain(plugin.PluginThread):
 
     def pStop(self):
         self.running = False
-        app['plugins']['rpc'].stop()
         if app['debug']:    print "Plugin %s stopping" %(self.name)
-        #for plugin in app['plugins']:
-        #    if app['plugins'][plugin].running == True:
-        #        app['plugins'][plugin].stop()
+        for plugin in app['plugins']:
+            if plugin == "rpc":  # rpc plugin seems to shut down everything
+                continue
+            if app['plugins'][plugin].running == True:
+                app['plugins'][plugin].stop()
+        app['plugins']['rpc'].stop()
         print "Plugin %s stopped" %(self.name)
 
     def pRestart(self):
