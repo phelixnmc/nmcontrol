@@ -43,6 +43,7 @@ def main():
     for argv in sys.argv:
         if argv in ['--debug=1','--main.debug=1']:
             app['debug'] = True
+            print "DEBUG MODE"
 
     # init modules
     import re

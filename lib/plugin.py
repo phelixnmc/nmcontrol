@@ -49,10 +49,16 @@ class PluginThread(threading.Thread):
         if len(self.depends) > 0:
             if 'plugins' in self.depends:
                 for dep in self.depends['plugins']:
-                    app['plugins'][dep].start()
+                    try:
+                        app['plugins'][dep].start()
+                    except KeyError:
+                        raise Exception(str(self.name) + " 'depends': plugin not found: " + dep)
             if 'services' in self.depends:
                 for dep in self.depends['services']:
-                    app['services'][dep].start()
+                    try:
+                        app['services'][dep].start()
+                    except KeyError:
+                        raise Exception(str(self.name) + " 'depends': service not found: " + dep)
         return self.pStart()
 
     def pStart(self, arg = []):
