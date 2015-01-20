@@ -4,8 +4,10 @@ generalKeywords = {"email": "mailto:",
 
 maxSchemeLength = 10  # arbitrary
 
-def ht_link(s):
-    return "<a href=" + s + ">" + s + "</a>"
+def ht_link(h, s=None):
+    if s == None:
+        s = h
+    return "<a href=" + h + ">" + s + "</a>"
 
 def is_uri_scheme(s):
     """e.g. 'bitcoin:' or 'mailto:'"""
@@ -18,7 +20,7 @@ def is_uri_scheme(s):
     if not s.replace(":", "").isalpha():  # stricter than URI spec
         return False
     return True
-    
+
 def startswith_uri_scheme(s):
     s = unicode(s)
     if not ":" in s:
@@ -28,42 +30,57 @@ def startswith_uri_scheme(s):
 
 class Parser(object):
     """Parse object and output processed string representation."""
-    def __init__(self, spaceChar="&nbsp;"):
+    def __init__(self, baseUrl="nmc:", spaceChar="&nbsp;"):
         self.spaceChar = spaceChar
+        self.baseUrl = baseUrl
     def spaces(self, indent):
         return 4 * indent * self.spaceChar
     def parse(self, X, indent=0, key=""):
-        s = ""    
-        if type(X) == dict or type(X) == tuple or type(X) == list:
-            #openChar, closeChar = str(type(X).__new__(type(X)))  # better?
-            #s += spaces(indent) + openChar + "\n"
-
-            #indent += 1        
+        s = ""
+        if type(X) == dict or type(X) == tuple or type(X) == list:  # recurse
             if type(X) == dict:
                 for x in sorted(X.keys()):
+                    if x == "value":
+                        s += "\n"
                     s += self.spaces(indent)
                     s += (x[:-1] if x.endswith(":") else x) + " : \n"
                     s += self.parse(X[x], indent + 1, key=x)
             else:
                 for x in X:
                     s += self.parse(x, indent + 1)
-            #indent -= 1
-            #s += spaces(indent) + closeChar + "\n"        
+
         else:
             # detect URI if any
             u = unicode(X)
             isUri = False
             uri = ""
+            displayUri = None
             if startswith_uri_scheme(u):
                 isUri = True
-            elif is_uri_scheme(key):                
+            elif is_uri_scheme(key):
                 isUri = True
                 uri = key
-            if not isUri and key in generalKeywords:
-                isUri = True
-                uri = generalKeywords[key]
+            if not isUri:
+                if key in generalKeywords:
+                    isUri = True
+                    uri = generalKeywords[key]
+                elif key == "import" or key == "next" or key == "t":
+                    isUri = True
+                    uri = self.baseUrl + "name="
+                    displayUri = "name:"
+                elif len(key) > 1 and key[0] == "t":
+                    try:
+                        int(key[1:])
+                        isUri = True
+                        uri = self.baseUrl + "name="
+                        displayUri = "name:"
+                    except ValueError:
+                        pass
             if isUri:
-                s += self.spaces(indent) + ht_link(uri + u) + "\n"
+                if displayUri:
+                    s += self.spaces(indent) + ht_link(uri + u, displayUri + u) + "\n"
+                else:
+                    s += self.spaces(indent) + ht_link(uri + u) + "\n"
             else:  # plain text
                 s += self.spaces(indent) + u + "\n"
         return s

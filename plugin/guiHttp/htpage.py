@@ -1,25 +1,14 @@
 import fmark3 as markup
 
-import htheader
-#import htfooter
 import cgi
 import os.path
 
 import jsonparser
 
-def render(baseUrl, queryComponents=None, jsonData={}):
-    ht = markup.page()
-
+def render(ht, baseUrl, queryComponents=None, jsonData={}):
     currentPage = "main"
     if queryComponents and queryComponents.has_key("p") and queryComponents["p"][0] in htheader.menuItems:
         currentPage = queryComponents["p"][0]  # why list?
-
-    title = "NMControl Name Browser"
-    styles = (baseUrl + '/static/style_v01.css')
-
-    ht.init(title=title, css=styles)
-
-    ht.add(htheader.render(baseUrl=baseUrl, currentPage=currentPage))  # menu
 
     with ht.div(style="padding:20px"):
         paragraphs = ("<b>Name Browser</b>", )
@@ -42,7 +31,7 @@ def render(baseUrl, queryComponents=None, jsonData={}):
             text = str(text.replace("\n", "<br>"))
             ht.add(text);ht.br();ht.br()
 
-    return str(ht)
+    return ht  # explicit return
 
 if __name__ == "__main__":
     html = render("asdf")
