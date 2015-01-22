@@ -1,7 +1,7 @@
 C:\Python27\Scripts\pyinstaller -p lib;plugin;service ^
     --hidden-import=asyncore --hidden-import=win32gui_struct --hidden-import=win32gui ^
     --hidden-import=winxpgui --hidden-import=commctrl --hidden-import=pywintypes ^
-    --noconfirm --noconsole nmcontrolwin.pyw
+    --noconfirm --noconsole --icon=./lib/icon.ico nmcontrolwin.pyw
 
 @if %errorlevel% EQU 0 goto continue
 @pause
