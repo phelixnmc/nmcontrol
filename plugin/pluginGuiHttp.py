@@ -37,7 +37,9 @@ if os.name == "nt":
 def launch_httpGui(app2):
     """Systray entry http GUI launch function."""
     if os.name == "nt":  # windows
-        subprocess.call(["cmd", "/c", "start", baseUrl])
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW  # console window is still showing up with pyinstaller... ugh
+        subprocess.call(["cmd.exe", "/c", "start", baseUrl])
     else:
         os.system(httpGuiUrl)  # untestet, probably wrong
 
