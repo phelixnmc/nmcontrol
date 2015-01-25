@@ -1,5 +1,7 @@
 import common
 import plugin
+import traceback
+import __main__
 
 import sys
 sys.path.append("plugin/guiHttp")
@@ -148,7 +150,12 @@ class pluginGuiHttp(plugin.PluginThread):
         ht.name = name
 
         ht = htpageheader.render(ht=ht)
-        ht = self.menuFunctions[page](ht=ht)
+
+        try:
+            ht = self.menuFunctions[page](ht=ht)
+        except:
+            ht.add("<br><br><b>ERROR:</b><br>")
+            ht.add(traceback.format_exc().replace("\n", "<br>"))
 
         req.wfile.write(str(ht))
         return True
@@ -170,6 +177,10 @@ class pluginGuiHttp(plugin.PluginThread):
             for stat in allStatusStrings.split("\n"):
                 print "stat:", type(stat), stat
                 ht.add("".join(stat) + "<br>")
+
+            if ht.url_query("debug"):
+                ht.add("<br>")
+                ht.add("main.file: " + __main__.__file__)
         return ht  # explicit return
 
 if __name__ == "__main__":
