@@ -6,9 +6,9 @@
 #define exefile "nmcontrolwin.exe"
 
 [Messages]
-WelcomeLabel2=%nThis will install [name/ver] on your computer.%n
+WelcomeLabel2=%nThis will install [name/ver] on your computer and modify your registry to catch DNS requests for .bit domain.%n
 ClickFinish=Click Finish to exit Setup.
-ConfirmUninstall=Are you sure you want to remove %1 and all of its components?%n%nThis will leave all config files alone.
+ConfirmUninstall=Are you sure you want to remove %1 and undo any registry changes?%n%nThis will leave config files alone.
 UninstalledAll=%1 was successfully removed from your computer.%n%nThere might still be configuration data in %APPDATA%\Nmcontrol
 
 [Setup]
@@ -41,3 +41,11 @@ Name: "{group}\uninstall"; Filename: "{uninstallexe}";
 
 [Run]
 Filename: "{app}\{#exefile}"; Description: "Launch application"; Flags: postinstall skipifsilent nowait
+
+[Registry]
+Root: HKLM; Subkey: "System\CurrentControlSet\services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "System\CurrentControlSet\services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; ValueType: dword; ValueName: "ConfigOptions"; ValueData: "8"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "System\CurrentControlSet\services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; ValueType: multisz; ValueName: "Name"; ValueData: ".bit"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "System\CurrentControlSet\services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; ValueType: string; ValueName: "IPSECCARestriction"; ValueData: ""; Flags: uninsdeletekey
+Root: HKLM; Subkey: "System\CurrentControlSet\services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; ValueType: string; ValueName: "GenericDNSServers"; ValueData: "127.0.0.1"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "System\CurrentControlSet\services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; ValueType: dword; ValueName: "Version"; ValueData: "2"; Flags: uninsdeletekey
