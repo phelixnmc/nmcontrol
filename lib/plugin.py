@@ -174,8 +174,8 @@ class PluginThread(threading.Thread):
         # create default config if none
         userConfFile = app['path']['conf'] + self.nameconf
         if not os.path.exists(userConfFile):
-            if not os.path.exists(app['path']['conf']):
-                os.mkdir(app['path']['conf'])
+            if not os.path.exists(app['path']['conf']): # TODO: Note that with Python 3.2+ we can compress this to os.makedirs(app['path']['conf'], exist_ok=True), see http://stackoverflow.com/a/5032238
+                os.makedirs(app['path']['conf'])
             fp = open(userConfFile, 'w')
             fp.write(defaultConf)
             fp.close()
