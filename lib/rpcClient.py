@@ -20,39 +20,38 @@ class rpcClient:
 
     def send(self, data):
         start = time.time()
-        try:
-            self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.s.settimeout(self.conf['timeout'])
-            self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            self.s.connect((self.conf['host'], int(self.conf['port'])))
-            #print '* Sending :', '\n', data
-            self.s.sendall(data)
-            result = ''.decode('iso-8859-1')
-            while True:
-                try:
-                    tmp = self.s.recv(self.size).decode('iso-8859-1')
-                except socket.timeout as e:
-                    break
-                self.s.settimeout(time.time() - start + 2)
-                if not tmp: break
-                result += tmp
-                if len(tmp)%self.size != 0: break
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.s.settimeout(self.conf['timeout'])
+        self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.s.connect((self.conf['host'], int(self.conf['port'])))
+        #print '* Sending :', '\n', data
+        self.s.sendall(data)
+        result = ''.decode('iso-8859-1')
+        while True:
+            try:
+                tmp = self.s.recv(self.size).decode('iso-8859-1')
+            except socket.timeout as e:
+                break
+            self.s.settimeout(time.time() - start + 2)
+            if not tmp: break
+            result += tmp
+            if len(tmp)%self.size != 0: break
 
-            #print '* Received :', '\n', result
-            self.s.close()
-            return (None, result)
-
-        except socket.error as e:
-            return (True, str(e) + ' - Unable to send command : ' + str(data))
-        except Exception as e:
-            return (True, 'Exception : ' + str(e))
+        #print '* Received :', '\n', result
+        self.s.close()
+        return (None, result)
 
     def sendJson(self, params):
         method = params[0]
         params.remove(method)
         body = json.dumps({'method': method, 'params': params, 'id':1})
 
-        (error, result) = self.send(body)
+        try:
+            (error, result) = self.send(body)
+        except socket.error as e:
+            return (True, "Error reaching NMControl (make sure NMControl is running): " + str(e) + ' - Unable to send command : ' + str(body) )
+        except Exception as e:
+            return (True, "Error reaching NMControl (make sure NMControl is running): " + str(e) + ' - Unable to send command : ' + str(body) )
 
         try:
             result2 = json.loads(result)
@@ -83,7 +82,12 @@ class rpcClientNamecoin(rpcClient):
         if  self.conf['user'] is not None and self.conf['password'] is not None:
             header += 'Authorization: Basic ' + base64.b64encode(self.conf['user'] + ':' + self.conf['password'], None) + '\n'
 
-        (error, data) = self.send(header + '\n' + body)
+        try:
+            (error, data) = self.send(header + '\n' + body)
+        except socket.error as e:
+            raise Exception( "Error reaching Namecoin client (make sure Namecoin client is running and accepting RPC connections): " + str(e) + ' - Unable to send command : ' + str(body) )
+        except Exception as e:
+            raise Exception( "Error reaching Namecoin client (make sure Namecoin client is running and accepting RPC connections): " + str(e) + ' - Unable to send command : ' + str(body) )
 
         resp = None
         found = False

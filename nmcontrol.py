@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python2
 
 __version__ = '0.8'
 
@@ -56,7 +56,7 @@ def main():
 
     # init service & plugins
     for modType in ['service', 'plugin']:
-        modules = dircache.listdir(modType)
+        modules = dircache.listdir(os.path.join(app['path']['app'], modType))
         if modType == 'plugin': modules.remove('pluginMain.py')
         for module in modules:
             if re.match("^"+modType+".*.py$", module):
@@ -71,6 +71,7 @@ def main():
                     print "Exception when loading "+modType, module, ":", e
 
     # parse command line options
+    # Note: There should not be plugins and services with the same name    
     (options, app['args']) = app['parser'].parse_args()
     for option, value in vars(options).items():
         if value is not None:
@@ -82,7 +83,7 @@ def main():
                 tmp.remove(module)
                 if module in app['plugins']:
                     app['plugins'][module].conf['.'.join(tmp)] = value
-                elif module in app['services']:
+                if module in app['services']:
                     app['services'][module].conf['.'.join(tmp)] = value
 
     ###### Act as client : send rpc request ######
