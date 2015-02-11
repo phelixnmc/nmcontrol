@@ -19,6 +19,7 @@ class pluginRpc(plugin.PluginThread):
         self.threads = []
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.s.settimeout(0.5)
         try:
             self.s.bind((self.conf['host'], int(self.conf['port'])))
             self.s.listen(1)
@@ -28,7 +29,8 @@ class pluginRpc(plugin.PluginThread):
                     c.start()
                     self.threads.append(c)
                 except Exception as e:
-                    if app['debug']: print "except:", e
+                    if app['debug'] and str(e) != "timed out":
+                        print "except:", e
         except KeyboardInterrupt:
             pass
         except:
