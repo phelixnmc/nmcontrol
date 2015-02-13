@@ -15,12 +15,20 @@ def main():
     app['conf'] = ConfigParser.SafeConfigParser()
     app['path'] = {}
     app['path']['app'] = os.path.dirname(os.path.realpath(__file__)) + os.sep
-    app['path']['conf'] = app['path']['app'] + os.sep + 'conf' + os.sep
 
     # add import path
     sys.path.append(app['path']['app'] + 'lib')
     sys.path.append(app['path']['app'] + 'plugin')
     sys.path.append(app['path']['app'] + 'service')
+
+    # add conf path
+    import platformDep
+    path = os.path.join(platformDep.getNmcontrolDir(), 'conf') + os.sep
+    for argv in sys.argv:
+        if argv.startswith("--confdir=") or argv.startswith("--main.confdir="):
+            path = argv.split("=")[1]
+            path = os.path.realpath(path) + os.sep
+    app['path']['conf'] = path
 
     import common
     common.app = app
@@ -65,8 +73,6 @@ def main():
     # parse command line options
     # Note: There should not be plugins and services with the same name    
     (options, app['args']) = app['parser'].parse_args()
-    if app['debug']: print "Cmdline args:", app['args']
-    if app['debug']: print "Cmdline options:", options
     for option, value in vars(options).items():
         if value is not None:
             tmp = option.split('.')
