@@ -4,32 +4,39 @@
 On windows the file extension .pyw hides the console window
 """
 
+outputFilename = "output.log"
+
+import time
+import os
+import sys
+sys.path.append("lib")
+
 class Unbuffered(object):
     """workaround for unbuffered stdout to file on py2 and py3 from so"""
     def __init__(self, stream):
         self.stream = stream
     def write(self, data):
-        self.stream.write(data)
+        for line in data.rstrip().splitlines():
+            self.stream.write(time.strftime("%Y-%m-%d %H:%M:%S") + " "  + line + "\n")
         self.stream.flush()
     def __getattr__(self, attr):
         return getattr(self.stream, attr)
 
 try:
-    import os
-    import sys
-    sys.path.append("lib")
+    import platformDep
+    import splashscreen
+    import nmcontrol
 
     # redirect console output to file as there is no console
-    import platformDep
-    outputFilename = platformDep.getNmcontrolDir() + os.sep + "output.log"
-    f = open(outputFilename, 'w')  # will overwrite the file on every start
+    outputPath = platformDep.getNmcontrolDir()
+    if not os.path.exists(outputPath):
+        os.makedirs(outputPath)
+    f = open(outputPath + os.sep + outputFilename, 'w')  # will overwrite the file on every start
     sys.stdout = Unbuffered(f)  # neither unbuffered nor line buffered seems to work properly on both py2 and py3
-    #sys.stderr = f
+    sys.stderr = Unbuffered(f)
 
-    import splashscreen
     splashscreen.splash('lib/splash.gif')
 
-    import nmcontrol
     nmcontrol.main()
 except:
     # GUI error output on crash
@@ -43,9 +50,12 @@ except:
         import tkinter
 
     root = tkinter.Tk()
-    tkinter.Label(root, justify="left", text=traceback.format_exc()).pack()
+    tkinter.Label(root, justify="left", text=traceback.format_exc() +
+    "\n\nThere might be more information in %APPDATA%\output.log").pack()
     tkinter.Button(root, text="OK", command=root.quit).pack()
     root.mainloop()
+
+time.sleep(0.2)  # wait until all processes have shut down and stopped writing to stdout
 try:
     f.close()
 except:
