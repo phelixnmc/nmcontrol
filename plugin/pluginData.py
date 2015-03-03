@@ -17,10 +17,11 @@ class pluginData(plugin.PluginThread):
         {'import.namecoin':    ['Path of namecoin.conf', platformDep.getNamecoinDir() + os.sep + 'namecoin.conf']},
 
         {'update.mode':        ['Update mode', 'ondemand', '<none|all|ondemand>']},
-        {'update.from':        ['Update data from', 'namecoin', '<namecoin|url|file>']},
+        {'update.from':        ['Update data from', 'namecoin', '<namecoin|rest|file>']},
         {'update.freq':        ['Update data if older than', '30m', '<number>[h|m|s]']},
         {'update.file':        ['Update data from file ', 'data' + os.sep + 'namecoin.dat']},
         {'update.namecoin':    ['Path of namecoin.conf', platformDep.getNamecoinDir() + os.sep + 'namecoin.conf']},
+        {'update.rest':        ['REST API to query', 'http://api.namecoin.info/beta1/']},
 
         {'export.mode':        ['Export mode', 'none', '<none|all>']},
         {'export.to':        ['Export data to', 'file']},
@@ -134,7 +135,7 @@ class pluginData(plugin.PluginThread):
             data = json.loads(data)
         except:
             if app['debug']: traceback.print_exc()
-            return False
+            #return False
 
         # handle imports
         data = self._processImport(data)
