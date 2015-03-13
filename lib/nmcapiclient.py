@@ -15,16 +15,18 @@ import traceback
 class NmcApiError(Exception):
     pass
 
-try:
-    sslContext = ssl.create_default_context()
-except AttributeError:
-    if not apiUrl.startswith("http://"):
-        raise NmcApiError("httpS:// connection not available. " +
-                          "Upgrade to a newer Python version "+
-                          "or change API URL to plain http://")
+if not apiUrl.startswith("http://"):
+    try:
+        sslContext = ssl.create_default_context()
+    except AttributeError:
+            raise NmcApiError("httpS:// connection not available. " +
+                              "Upgrade to a newer Python version "+
+                              "or change API URL to plain http://")
+    opener = urllib2.build_opener(urllib2.HTTPHandler(),
+                              urllib2.HTTPSHandler(context=sslContext))
+else:
+    opener = urllib2.build_opener(urllib2.HTTPHandler())
 
-opener = urllib2.build_opener(urllib2.HTTPHandler(debuglevel=0),
-                              urllib2.HTTPSHandler(debuglevel=0, context=sslContext))
 opener.addheaders = [('User-agent', 'nmcapiclient 100 ' + str(os.name))]
 
 def get_name(name, processed=True):

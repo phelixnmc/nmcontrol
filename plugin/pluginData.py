@@ -17,7 +17,7 @@ class pluginData(plugin.PluginThread):
         {'import.namecoin':    ['Path of namecoin.conf', platformDep.getNamecoinDir() + os.sep + 'namecoin.conf']},
 
         {'update.mode':        ['Update mode', 'ondemand', '<none|all|ondemand>']},
-        {'update.from':        ['Update data from', 'namecoin', '<namecoin|rest|file>']},
+        {'update.from':        ['Update data from', 'rest', '<namecoin|rest|file>']},
         {'update.freq':        ['Update data if older than', '30m', '<number>[h|m|s]']},
         {'update.file':        ['Update data from file ', 'data' + os.sep + 'namecoin.dat']},
         {'update.namecoin':    ['Path of namecoin.conf', platformDep.getNamecoinDir() + os.sep + 'namecoin.conf']},
