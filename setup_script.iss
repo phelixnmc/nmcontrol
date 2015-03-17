@@ -7,7 +7,7 @@
 
 [Messages]
 WelcomeLabel2=%nThis will install [name/ver] on your computer and modify your registry to catch DNS requests for .bit domain.%n
-ClickFinish=Click Finish to exit Setup.
+ClickFinish=Note the system tray icon.%n%nWARNING: by default api.namecoin.org will be queried.%n%nClick Finish to exit Setup.
 ConfirmUninstall=Are you sure you want to remove %1 and undo any registry changes?%n%nThis will leave config files alone.
 UninstalledAll=%1 was successfully removed from your computer.%n%nThere might still be configuration data in %APPDATA%\Nmcontrol
 
@@ -27,21 +27,23 @@ Source: "{#sourceFolder}\{#exefile}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#sourceFolder}\*.*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 
 [Tasks]
-Name: desktopicon; Description: "Create a &desktop icon"; GroupDescription: "Additional icons:"
-Name: desktopicon\common; Description: "For all users"; GroupDescription: "Additional icons:"; Flags: exclusive
-Name: desktopicon\user; Description: "For the current user only"; GroupDescription: "Additional icons:"; Flags: exclusive unchecked
+Name: quicklaunchicon; Description: "Create a &Quick Launch icon for the current user"; Flags: unchecked
 
-Name: quicklaunchicon; Description: "Create a &Quick Launch icon for the current user"; GroupDescription: "Additional icons:"; Flags: unchecked
+Name: desktopicon; Description: "Create a &desktop icon"
+Name: desktopicon\common; Description: "For all users"; Flags: exclusive unchecked
+Name: desktopicon\user; Description: "For the current user only"; Flags: exclusive unchecked
 
-Name: startup; Description: "Automatically &start on login"; GroupDescription: "Additional icons:"
-Name: startup\common; Description: "For all users"; GroupDescription: "Additional icons:"; Flags: exclusive
-Name: startup\user; Description: "For the current user only"; GroupDescription: "Additional icons:"; Flags: exclusive unchecked
+Name: startup; Description: "Automatically &start on login";
+Name: startup\common; Description: "For all users"; Flags: exclusive unchecked
+Name: startup\user; Description: "For the current user only"; Flags: exclusive
 
 [Icons]
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#progname}"; Filename: "{app}\{#exefile}"; Tasks: quicklaunchicon
+
 Name: "{group}\{#progname}"; Filename: "{app}\{#exefile}"
 Name: "{commondesktop}\{#progname}"; Filename: "{app}\{#exefile}"; Tasks: desktopicon\common
 Name: "{userdesktop}\{#progname}"; Filename: "{app}\{#exefile}"; Tasks: desktopicon\user
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#progname}"; Filename: "{app}\{#exefile}"; Tasks: quicklaunchicon
+
 Name: "{group}\uninstall"; Filename: "{uninstallexe}";
 Name: "{commonstartup}\{#progname}"; Filename: "{app}\{#exefile}"; Tasks: startup\common
 Name: "{userstartup}\{#progname}"; Filename: "{app}\{#exefile}"; Tasks: startup\user
