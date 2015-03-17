@@ -14,3 +14,7 @@ mkdir dist\nmcontrolwin\service\
 xcopy lib dist\nmcontrolwin\lib /s /e /h /y
 xcopy plugin dist\nmcontrolwin\plugin /s /e /h /y
 xcopy service dist\nmcontrolwin\service /s /e /h /y
+
+rmdir dist\nmcontrolwin\_MEI\tk\images /s /q
+rmdir dist\nmcontrolwin\_MEI\tcl\tzdata /s /q
+rmdir dist\nmcontrolwin\_MEI\tcl\msgs /s /q
