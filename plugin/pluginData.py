@@ -17,11 +17,11 @@ class pluginData(plugin.PluginThread):
         {'import.namecoin':    ['Path of namecoin.conf', platformDep.getNamecoinDir() + os.sep + 'namecoin.conf']},
 
         {'update.mode':        ['Update mode', 'ondemand', '<none|all|ondemand>']},
-        {'update.from':        ['Update data from', 'rest', '<namecoin|rest|file>']},
+        {'update.from':        ['Update data from', 'api', '<api|namecoin|file>']},
         {'update.freq':        ['Update data if older than', '30m', '<number>[h|m|s]']},
         {'update.file':        ['Update data from file ', 'data' + os.sep + 'namecoin.dat']},
         {'update.namecoin':    ['Path of namecoin.conf', platformDep.getNamecoinDir() + os.sep + 'namecoin.conf']},
-        {'update.rest':        ['REST API to query', 'http://api.namecoin.info/beta1/']},
+        {'update.api':        ['API server to query', 'https://api.namecoin.org/beta1/']},
 
         {'export.mode':        ['Export mode', 'none', '<none|all>']},
         {'export.to':        ['Export data to', 'file']},
@@ -131,11 +131,12 @@ class pluginData(plugin.PluginThread):
 
     def getValueProcessed(self, name):
         data = self.getValue(name)
-        try:
-            data = json.loads(data)
-        except:
-            if app['debug']: traceback.print_exc()
-            #return False
+        if type(data) != dict:  # if the value is not properly escaped it may have been parsed already - this may allow a value to cause an exception
+            try:
+                data = json.loads(data)
+            except:
+                if app['debug']: traceback.print_exc()
+                return False
 
         # handle imports
         data = self._processImport(data)
@@ -185,12 +186,13 @@ class pluginData(plugin.PluginThread):
             # 'processing' of a value is more than just import,
             # we possibly want that in the future.
             impData = self.getValue(impName)
-            try:
-                impData = json.loads(impData)
-            except:
-                if app['debug']: traceback.print_exc()
-                # XXX: Maybe return data here instead of fail?
-                return False
+            if type(impData) != dict:
+                try:
+                    impData = json.loads(impData)
+                except:
+                    if app['debug']: traceback.print_exc()
+                    # XXX: Maybe return data here instead of fail?
+                    return False
 
             impData = self._processImport(impData, limit - 1)
             for key in impData:
