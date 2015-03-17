@@ -2,7 +2,7 @@
 #define version "0.8"
 
 #define sourceFolder "dist\nmcontrolwin"
-#define progname "Namecontrol"
+#define progname "NMControl"
 #define exefile "nmcontrolwin.exe"
 
 [Messages]
@@ -30,14 +30,21 @@ Source: "{#sourceFolder}\*.*"; DestDir: "{app}"; Flags: ignoreversion recursesub
 Name: desktopicon; Description: "Create a &desktop icon"; GroupDescription: "Additional icons:"
 Name: desktopicon\common; Description: "For all users"; GroupDescription: "Additional icons:"; Flags: exclusive
 Name: desktopicon\user; Description: "For the current user only"; GroupDescription: "Additional icons:"; Flags: exclusive unchecked
-Name: quicklaunchicon; Description: "Create a &Quick Launch icon"; GroupDescription: "Additional icons:"; Flags: unchecked
+
+Name: quicklaunchicon; Description: "Create a &Quick Launch icon for the current user"; GroupDescription: "Additional icons:"; Flags: unchecked
+
+Name: startup; Description: "Automatically &start on login"; GroupDescription: "Additional icons:"
+Name: startup\common; Description: "For all users"; GroupDescription: "Additional icons:"; Flags: exclusive
+Name: startup\user; Description: "For the current user only"; GroupDescription: "Additional icons:"; Flags: exclusive unchecked
 
 [Icons]
 Name: "{group}\{#progname}"; Filename: "{app}\{#exefile}"
-Name: "{commondesktop}\Namecontrol"; Filename: "{app}\{#exefile}"; Tasks: desktopicon\common
-Name: "{userdesktop}\Namecontrol"; Filename: "{app}\{#exefile}"; Tasks: desktopicon\user
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Namecontrol"; Filename: "{app}\{#exefile}"; Tasks: quicklaunchicon
+Name: "{commondesktop}\{#progname}"; Filename: "{app}\{#exefile}"; Tasks: desktopicon\common
+Name: "{userdesktop}\{#progname}"; Filename: "{app}\{#exefile}"; Tasks: desktopicon\user
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#progname}"; Filename: "{app}\{#exefile}"; Tasks: quicklaunchicon
 Name: "{group}\uninstall"; Filename: "{uninstallexe}";
+Name: "{commonstartup}\{#progname}"; Filename: "{app}\{#exefile}"; Tasks: startup\common
+Name: "{userstartup}\{#progname}"; Filename: "{app}\{#exefile}"; Tasks: startup\user
 
 [Run]
 Filename: "{app}\{#exefile}"; Description: "Launch application"; Flags: postinstall skipifsilent nowait
@@ -49,3 +56,6 @@ Root: HKLM; Subkey: "System\CurrentControlSet\services\Dnscache\Parameters\DnsPo
 Root: HKLM; Subkey: "System\CurrentControlSet\services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; ValueType: string; ValueName: "IPSECCARestriction"; ValueData: ""; Flags: uninsdeletekey
 Root: HKLM; Subkey: "System\CurrentControlSet\services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; ValueType: string; ValueName: "GenericDNSServers"; ValueData: "127.0.0.1"; Flags: uninsdeletekey
 Root: HKLM; Subkey: "System\CurrentControlSet\services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; ValueType: dword; ValueName: "Version"; ValueData: "2"; Flags: uninsdeletekey
+
+
+
