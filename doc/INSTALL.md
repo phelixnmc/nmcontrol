@@ -38,7 +38,7 @@ View help and rpc commands :
 	nmcontrol.py data help
 	nmcontrol.py data getValue help
 
-Fecth data (from namecoin first, then data is cached) :
+Fetch data (from namecoin first, then data is cached) :
 
 	nmcontrol.py data getValue d/dns
 
