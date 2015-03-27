@@ -124,7 +124,8 @@ class pluginDns(plugin.PluginThread):
         self._resolve(domain, recType, result)
 
         return result.toJsonForRPC()
-
+    
+    @plugin.public
     def getIp4(self, domain):
         result = self._getRecordForRPC(domain, 'getIp4')
         # if we got an NS record because there is no IP we need to ask the NS server for the IP
@@ -140,6 +141,7 @@ class pluginDns(plugin.PluginThread):
 
         return result
 
+    @plugin.public
     def getIp6(self, domain):
         result = self._getRecordForRPC(domain, 'getIp6')
         # if we got an NS record because there is no IP we need to ask the NS server for the IP
@@ -155,21 +157,27 @@ class pluginDns(plugin.PluginThread):
 
         return result
 
+    @plugin.public
     def getOnion(self, domain):
         return self._getRecordForRPC(domain, 'getOnion')
 
+    @plugin.public
     def getI2p(self, domain):
         return self._getRecordForRPC(domain, 'getI2p')
 
+    @plugin.public
     def getI2p_b32(self, domain):
         return self._getRecordForRPC(domain, 'getI2p_b32')
 
+    @plugin.public
     def getFreenet(self, domain):
         return self._getRecordForRPC(domain, 'getFreenet')
 
+    @plugin.public
     def getFingerprint(self, domain):
         return self._getRecordForRPC(domain, 'getFingerprint')
 
+    @plugin.public
     def verifyFingerprint (self, domain, fpr):
         allowable = self.getFingerprint (domain)
         try:
@@ -193,6 +201,7 @@ class pluginDns(plugin.PluginThread):
             print "No acceptable fingerprint found."
         return False
 
+    @plugin.public
     def getTlsFingerprint(self, domain, protocol, port):
         #return tls data for the queried FQDN, or the first includeSubdomain tls record
         result = self._getTls(domain)
@@ -215,9 +224,11 @@ class pluginDns(plugin.PluginThread):
         result.add(domain, 'getTlsFingerprint' , answer)
         return result.toJsonForRPC()
 
+    @plugin.public
     def getNS(self, domain):
         return self._getRecordForRPC(domain, 'getNS')
 
+    @plugin.public
     def getTranslate(self, domain):
         return self._getRecordForRPC(domain, 'getTranslate')
 
