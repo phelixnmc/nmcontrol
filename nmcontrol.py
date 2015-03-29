@@ -71,7 +71,7 @@ def main():
                     print "Exception when loading "+modType, module, ":", e
 
     # parse command line options
-    # Note: There should not be plugins and services with the same name    
+    # Note: There should not be plugins and services with the same name
     (options, app['args']) = app['parser'].parse_args()
     for option, value in vars(options).items():
         if value is not None:
@@ -119,6 +119,10 @@ def main():
                 plugins_started.append(app['plugins'][plugin].name)
     print "Plugins started :", ', '.join(plugins_started)
 
+    for plugin in app['plugins']:
+        if app['plugins'][plugin].__dict__.has_key("criticalStartException") and app['plugins'][plugin].criticalStartException:
+            raise Exception(app['plugins'][plugin].criticalStartException)
+
     #services_started = []
     #for service in app['services']:
     #    if app['services'][service].running:
@@ -137,4 +141,3 @@ def main():
 
 if __name__=='__main__':
     main()
-

@@ -131,7 +131,7 @@ class rpcClientThread(threading.Thread):
 
         if plugin not in app['plugins']:
             return (True, 'Plugin "' + plugin + '" not allowed')
-        if not app['plugins'][plugin].running and params[0] != 'start':
+        if not app['plugins'][plugin].running and len(params) and params[0] != 'start':
             return (True, 'Plugin "' + plugin + '" not started')
 
         if method == 'start': method = 'start2'
