@@ -41,3 +41,19 @@ Documentation
 
 [doc/INSTALL.md](doc/INSTALL.md)
 
+REST API
+========
+
+NMControl will by default start a REST API server on 127.0.0.2:8080.  You can access it like this:
+
+    http://127.0.0.2:8080/dns/getIp4/bluishcoder.bit.json
+
+Which will return something like this:
+
+    {"result": "[\"198.58.109.235\"]"}
+
+All non-dangerous methods should be available via REST.  Potentially dangerous methods, such as the "stop" method, are not accessible via REST for security reasons, and can only be accessed via RPC.
+
+When accessing a method which takes multiple arguments, the arguments should be separated by a space character (%20 in the URL).
+
+Note that we are **not** committing to a stable API at this point, so consider the REST feature to be experimental.
