@@ -8,6 +8,10 @@ import sys
 
 import json
 
+import os
+if os.name == "nt":
+    import subprocess
+
 """
 TODO:
 
@@ -15,6 +19,14 @@ Stop logging
 HTTP response codes
 API key auth - sha256 and passlib.utils.consteq
 """
+
+def launch_httpGui(app2):
+    """Systray entry http GUI launch function."""
+    httpGuiUrl = "http://" + app2["plugins"]["http"].conf['host'] + ":" + app2["plugins"]["http"].conf['port']
+    if os.name == "nt":  # windows
+        subprocess.call(["cmd", "/c", "start", httpGuiUrl])
+    else:
+        os.system(httpGuiUrl)  # untested, probably wrong
 
 @route('/<plugin>/<method>/<args:path>.json')
 def call_plugin(plugin, method, args):
@@ -90,13 +102,14 @@ def call_plugin(plugin, method, args):
     return {"result":result}
 
 class pluginHttp(plugin.PluginThread):
-    name = 'httpnew'
+    name = 'http'
     options = {
         'start':    ['Launch at startup', 1],
         'host':        ['Listen on ip', '127.0.0.2', '<ip>'],
         'port':        ['Listen on port', '8080', '<port>'],
         # TODO: Figure out what the defaults should be for IP/port
     }
+    systrayEntry = ('httpGui', None, launch_httpGui)  # menu icons should somehow be possible via the middle option
 
     def pStatus(self):
         if self.running:
