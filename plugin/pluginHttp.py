@@ -7,6 +7,7 @@ import StringIO
 import sys
 
 import json
+import traceback
 
 import os
 if os.name == "nt":
