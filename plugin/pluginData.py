@@ -98,6 +98,7 @@ class pluginData(plugin.PluginThread):
             importedClass = getattr(importedModule, 'backendData')
             self.export = importedClass(self.conf['export.' + self.conf['export.to']])
 
+    @plugin.public
     def getData(self, name):
         if name not in self.data or self.data[name]['expires_at'] < time.time():
             error, data = self.update.getName(name)
@@ -116,6 +117,7 @@ class pluginData(plugin.PluginThread):
         else:
             return False
 
+    @plugin.public
     def getValue(self, name):
         data = self.getData(name)
 
@@ -128,6 +130,7 @@ class pluginData(plugin.PluginThread):
 
         return False
 
+    @plugin.public
     def getValueProcessed(self, name):
         data = self.getValue(name)
         try:
@@ -141,6 +144,7 @@ class pluginData(plugin.PluginThread):
 
         return data
 
+    @plugin.public
     def getJson(self, name, recordKeys):
         result = ""
         data = self.getValue(name)

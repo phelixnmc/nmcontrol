@@ -9,6 +9,10 @@ from ConfigParser import SafeConfigParser
 import inspect
 import json
 
+def public(func):
+    func.rpc_public = True
+    return func
+
 class PluginThread(threading.Thread):
     daemon = True
     name = None
@@ -194,10 +198,23 @@ class PluginThread(threading.Thread):
         pass
 
     # call a plugin method
-    def _rpc(self, method, *args): #, module = None):
+    def _rpc(self, method, *args, **kwargs): #, module = None):
         #if module is not None and (type(module) == str or type(module) == unicode):
         #    self = __import__(module)
         #elif module is not None:
         #    self = module
+        
         func = getattr(self, method)
+        
+        if "api_user" not in kwargs:
+            api_user = "public"
+        else:
+            api_user = kwargs["api_user"]
+        
+        if app["debug"]:
+            print method, "public function?", hasattr(func, "rpc_public")
+        
+        if api_user != "admin" and not hasattr(func, "rpc_public"):
+            raise Exception('Method "' + method + '" not allowed')
+        
         return func(*args)

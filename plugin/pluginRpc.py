@@ -169,7 +169,7 @@ class rpcClientThread(threading.Thread):
 
         try:
             methodRpc = getattr(app['plugins'][plugin], '_rpc')
-            result = methodRpc(method, *params)
+            result = methodRpc(method, *params, **{"api_user":"admin"})
         except AttributeError, e:
             if app['debug']: traceback.print_exc()
             return (True, 'Method "' + method + '" not supported by plugin "' + plugin + '"')
