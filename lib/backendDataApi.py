@@ -10,7 +10,14 @@ class backendData():
                                 set import.mode=none or switch to a different import.from backend.''')
 
     def getName(self, name):
-        return (None, self.nmcApiOpener.get_name(name))
+        # translate to NMControl error handling
+        try:
+            D = self.nmcApiOpener.get_name(name)
+            if D == {}:
+                return (1, "Name does not seem to exist.")
+        except Exception as e:
+            return (2, e.__class__.__name__ + ": " + str(e))
+        return (None, D)
 
 if __name__ == "__main__":
     b = backendData()

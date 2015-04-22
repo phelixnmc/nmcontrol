@@ -22,7 +22,7 @@ class NmcApiOpener(object):
         self.url = url
         self.timeout = timeout
         self.useHashfuscate = hashfuscate
-        
+
         if not url.startswith("http://"):
             try:
                 sslContext = ssl.create_default_context()
@@ -66,6 +66,10 @@ class NmcApiOpener(object):
                 f.close()
             except:
                 pass
+            if data.startswith('{"ERROR": "Name does not seem to exist."}'):
+                return {}  # could also use exception
+            if data.startswith('{"ERROR":'):
+                raise NmcApiError(data)
             if self.useHashfuscate:
                 data, h = hashfuscate.decode(data, returnHash=True)
             jData = json.loads(data)
@@ -81,7 +85,7 @@ class NmcApiOpener(object):
 
 if __name__ == "__main__":
     url = "https://api.namecoin.org/beta1"
-    #url = "http://localhost:8080/beta1"    
+    #url = "http://localhost:8080/beta1"
     nmcApiOpener = NmcApiOpener(url)
 
     print "get_name_show d/nx:", nmcApiOpener.get_name_show("d/nx"), "\n"
