@@ -1,0 +1,13 @@
+language: python
+os: linux
+python:
+  - "2.7"
+  - "pypy"
+install:
+  - pip install -r requirements.txt
+  - pip install pylint
+script:
+  - echo "PyLint report..."
+  - test/pylint_tree.sh
+  - echo "Checking for fatal errors in PyLint"
+  - test/pylint_error.sh --report=no --disable=R,C,W,E
