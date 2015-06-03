@@ -152,14 +152,8 @@ class PluginThread(threading.Thread):
         # add command line args to the program options + build default configuration data
         defaultConf = '[' + self.name + ']\n'
         group = OptionGroup(app['parser'], self.name.capitalize() + " Options", self.desc)
-        if self.options.__class__ is dict:
-            tmp = []
-            for option, value in self.options.items():
-                tmp.append({option: value})
-            self.options = tmp
-        #for option, value in self.options.items():
         for option in self.options:
-            option, value = option.items()[0]
+            value = self.options[option]
             if len(value) == 3:
                 help = value[0] + " " + value[2] + ""
                 defaultConf += '; ' + value[0] + ' - choices: ' + value[2] + '\n'
@@ -203,18 +197,18 @@ class PluginThread(threading.Thread):
         #    self = __import__(module)
         #elif module is not None:
         #    self = module
-        
+
         func = getattr(self, method)
-        
+
         if "api_user" not in kwargs:
             api_user = "public"
         else:
             api_user = kwargs["api_user"]
-        
+
         if app["debug"]:
             print method, "public function?", hasattr(func, "rpc_public")
-        
+
         if api_user != "admin" and not hasattr(func, "rpc_public"):
             raise Exception('Method "' + method + '" not allowed')
-        
+
         return func(*args)

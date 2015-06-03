@@ -7,6 +7,7 @@ import sys
 import inspect
 import optparse
 import ConfigParser
+import traceback
 
 app = {}
 def main():
@@ -58,6 +59,8 @@ def main():
         modules = os.listdir(os.path.join(app['path']['app'], modType))
         if modType == 'plugin': modules.remove('pluginMain.py')
         for module in modules:
+            if app["debug"]:
+                print "launching", modType, module
             if re.match("^"+modType+".*.py$", module):
                 module = re.sub(r'\.py$', '', module)
                 modulename = re.sub(r'^'+modType, '', module).lower()
@@ -68,6 +71,7 @@ def main():
                     importedClass.app = app
                 except Exception as e:
                     print "Exception when loading "+modType, module, ":", e
+                    traceback.print_exc()
 
     # parse command line options
     # Note: There should not be plugins and services with the same name
