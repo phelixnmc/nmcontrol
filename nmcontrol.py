@@ -59,12 +59,12 @@ def main():
         modules = os.listdir(os.path.join(app['path']['app'], modType))
         if modType == 'plugin': modules.remove('pluginMain.py')
         for module in modules:
-            if app["debug"]:
-                print "launching", modType, module
             if re.match("^"+modType+".*.py$", module):
                 module = re.sub(r'\.py$', '', module)
                 modulename = re.sub(r'^'+modType, '', module).lower()
                 try:
+                    if app["debug"]:
+                        print "launching", modType, module
                     importedModule = __import__(module)
                     importedClass = getattr(importedModule, module)
                     app[modType+'s'][importedClass.name] = importedClass(modType)
