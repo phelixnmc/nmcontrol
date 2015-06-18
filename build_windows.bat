@@ -1,9 +1,22 @@
-C:\Python27\Scripts\pyinstaller -p lib;plugin;service --hidden-import=asyncore nmcontrol.py
+C:\Python27\Scripts\pyinstaller -p lib;plugin;service ^
+    --hidden-import=asyncore --hidden-import=win32gui_struct --hidden-import=win32gui ^
+    --hidden-import=winxpgui --hidden-import=commctrl --hidden-import=pywintypes ^
+    --noconfirm --noconsole --icon=./lib/icon.ico nmcontrolwin.pyw
 
-mkdir dist\nmcontrol\lib\
-mkdir dist\nmcontrol\plugin\
-mkdir dist\nmcontrol\service\
+@if %errorlevel% EQU 0 goto continue
+@pause
+:continue
 
-xcopy lib dist\nmcontrol\lib /s /e /h
-xcopy plugin dist\nmcontrol\plugin /s /e /h
-xcopy service dist\nmcontrol\service /s /e /h
+mkdir dist\nmcontrolwin\lib\
+mkdir dist\nmcontrolwin\plugin\
+mkdir dist\nmcontrolwin\service\
+
+xcopy lib dist\nmcontrolwin\lib /s /e /h /y
+xcopy plugin dist\nmcontrolwin\plugin /s /e /h /y
+xcopy service dist\nmcontrolwin\service /s /e /h /y
+
+rmdir dist\nmcontrolwin\_MEI\tk\images /s /q
+rmdir dist\nmcontrolwin\_MEI\tcl\tzdata /s /q
+rmdir dist\nmcontrolwin\_MEI\tcl\msgs /s /q
+
+del dist\*.pyc /s /q
