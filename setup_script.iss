@@ -6,7 +6,7 @@
 #define exefile "nmcontrolwin.exe"
 
 [Messages]
-WelcomeLabel2=%nThis will install [name/ver] on your computer and modify your registry to catch DNS requests for .bit domain.%n
+WelcomeLabel2=%nThis will install [name/ver] on your computer and modify your registry to catch DNS requests for .bit domains (on Windows 8 and higher).%n
 ClickFinish=Click Finish to exit Setup.
 ConfirmUninstall=Are you sure you want to remove %1 and undo any registry changes?%n%nThis will leave config files alone.
 UninstalledAll=%1 was successfully removed from your computer.%n%nThere might still be configuration data in %APPDATA%\Nmcontrol
