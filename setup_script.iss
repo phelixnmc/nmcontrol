@@ -52,12 +52,12 @@ Name: "{userstartup}\{#progname}"; Filename: "{app}\{#exefile}"; Tasks: startup\
 Filename: "{app}\{#exefile}"; Description: "Launch application"; Flags: postinstall skipifsilent nowait
 
 [Registry]
-Root: HKLM; Subkey: "System\CurrentControlSet\services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; Flags: uninsdeletekey
-Root: HKLM; Subkey: "System\CurrentControlSet\services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; ValueType: dword; ValueName: "ConfigOptions"; ValueData: "8"; Flags: uninsdeletekey
-Root: HKLM; Subkey: "System\CurrentControlSet\services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; ValueType: multisz; ValueName: "Name"; ValueData: ".bit"; Flags: uninsdeletekey
-Root: HKLM; Subkey: "System\CurrentControlSet\services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; ValueType: string; ValueName: "IPSECCARestriction"; ValueData: ""; Flags: uninsdeletekey
-Root: HKLM; Subkey: "System\CurrentControlSet\services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; ValueType: string; ValueName: "GenericDNSServers"; ValueData: "127.0.0.1"; Flags: uninsdeletekey
-Root: HKLM; Subkey: "System\CurrentControlSet\services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; ValueType: dword; ValueName: "Version"; ValueData: "2"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "System\CurrentControlSet\Services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "System\CurrentControlSet\Services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; ValueType: dword; ValueName: "ConfigOptions"; ValueData: "8"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "System\CurrentControlSet\Services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; ValueType: multisz; ValueName: "Name"; ValueData: ".bit"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "System\CurrentControlSet\Services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; ValueType: string; ValueName: "IPSECCARestriction"; ValueData: ""; Flags: uninsdeletekey
+Root: HKLM; Subkey: "System\CurrentControlSet\Services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; ValueType: string; ValueName: "GenericDNSServers"; ValueData: "127.0.0.1"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "System\CurrentControlSet\Services\Dnscache\Parameters\DnsPolicyConfig\NMControl"; ValueType: dword; ValueName: "Version"; ValueData: "1"; Flags: uninsdeletekey
 
-
-
+# The Name key specification is Software\Policies\Microsoft\Windows NT\DNSClient\DnsPolicyConfig\{Name}. In the presence of both specified keys, Windows ignores the System\CurrentControlSet\services\Dnscache\Parameters key.
+# --> switch to Software\Policies\Microsoft\Windows NT\DNSClient\DnsPolicyConfig\{Name} ?
