@@ -27,8 +27,12 @@ class pluginNamespaceDomain(plugin.PluginThread):
         'getTranslate'        : 'translate',
     }
 
-    def pLoadconfig(self):
-        app['plugins']['dns'].handlers.append(self)
+    def pStart(self):
+        if self not in app['plugins']['dns'].handlers:
+            app['plugins']['dns'].handlers.append(self)
+        
+        if app['debug']:
+            print "Set up DNS handlers, len =", len(app['plugins']['dns'].handlers)
 
     # specific filter for this handler
     def _handle(self, domain, recType):
