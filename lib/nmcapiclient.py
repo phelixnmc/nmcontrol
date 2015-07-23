@@ -18,26 +18,28 @@ class NmcApiError(Exception):
     pass
 
 class NmcApiOpener(object):
-    def __init__(self, url, hashfuscate=True, timeout=None):
+    def __init__(self, url, hashfuscate=True, timeout=None, opener=None):
         self.url = url
         self.timeout = timeout
         self.useHashfuscate = hashfuscate
 
-        if not url.startswith("http://"):
-            try:
-                sslContext = ssl.create_default_context()
-            except AttributeError:
-                raise NmcApiError("httpS connection not available. " +
-                                  "Upgrade to a newer Python version "+
-                                  "or change API URL to plain http")
-            # remove unsafe RC4 ciphers if present (https://hg.python.org/cpython/rev/3596081cfb55)
-            if "RC4" in ssl._DEFAULT_CIPHERS.upper().replace("!RC4", ""):
-                sslContext.set_ciphers('DH+HIGH:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+HIGH:RSA+3DES:!aNULL:!eNULL:!MD5')
+        self.opener = opener
+        if not self.opener:
+            if not url.startswith("http://"):
+                try:
+                    sslContext = ssl.create_default_context()
+                except AttributeError:
+                    raise NmcApiError("httpS connection not available. " +
+                                      "Upgrade to a newer Python version "+
+                                      "or change API URL to plain http")
+                # remove unsafe RC4 ciphers if present (https://hg.python.org/cpython/rev/3596081cfb55)
+                if "RC4" in ssl._DEFAULT_CIPHERS.upper().replace("!RC4", ""):
+                    sslContext.set_ciphers('DH+HIGH:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+HIGH:RSA+3DES:!aNULL:!eNULL:!MD5')
 
-            self.opener = urllib2.build_opener(urllib2.HTTPHandler(),
-                                      urllib2.HTTPSHandler(context=sslContext))
-        else:
-            self.opener = urllib2.build_opener(urllib2.HTTPHandler())
+                self.opener = urllib2.build_opener(urllib2.HTTPHandler(),
+                                          urllib2.HTTPSHandler(context=sslContext))
+            else:
+                self.opener = urllib2.build_opener(urllib2.HTTPHandler())
 
         self.opener.addheaders = [('User-agent', USER_AGENT)]
 

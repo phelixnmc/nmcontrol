@@ -1,9 +1,12 @@
 import nmcapiclient
 
+import torgate
+
 class backendData():
     def __init__(self, updateFrom):
         assert updateFrom.startswith("http")
-        self.nmcApiOpener = nmcapiclient.NmcApiOpener(updateFrom)
+        opener = torgate.opener()
+        self.nmcApiOpener = nmcapiclient.NmcApiOpener(updateFrom, opener=opener)
     def getAllNames(self):
         """The REST API doesn't support enumerating the names."""
         raise Exception('''ERROR: REST data backend does not support name enumeration; +
@@ -20,6 +23,16 @@ class backendData():
         return (None, D)
 
 if __name__ == "__main__":
-    b = backendData()
-    print b.getName("d/nx")
+    class Main(object):
+        conf = {'tor' : 1,
+                    'torport' : 'auto',
+                    'torip' : '127.0.0.1'}
+    import common
+    common.app = {'plugins' : {'main' : Main()}}
 
+    common.app['plugins']['main'].conf['tor']
+
+    b = backendData("https://api.namecoin.org/beta1")
+    print b.getName("d/nx")
+    print b.getName("d/wikileaks")
+    print b.getName("d/nameid")

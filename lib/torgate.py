@@ -41,7 +41,7 @@ def build_opener_default_port(ip="127.0.0.1"):
 
 def opener():
     if not common.app['plugins']['main'].conf['tor']:
-        return urllib2.build_opener()
+        return None  # urllib2.build_opener()
     if common.app['plugins']['main'].conf['torport'] == AUTO:
         return build_opener_default_port(ip=common.app['plugins']['main'].conf['torip'])
     return build_opener(ip=common.app['plugins']['main'].conf['torip'],
