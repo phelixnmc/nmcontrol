@@ -11,22 +11,32 @@ import common
 
 AUTO = "auto"
 
+doCheck = True
 def build_opener(ip="127.0.0.1", port=9150):
     o = urllib2.build_opener(sockshandler.SocksiPyHandler(socks.PROXY_TYPE_SOCKS5, ip, port))
-    try:
-        o.open("http://127.0.0.1")
-    except socks.ProxyConnectionError:
-        raise TorNotFoundError
-    except socks.SOCKS5Error:
-        # error because no http server is running locally
-        pass
+    global doCheck
+    if doCheck:
+        try:
+            o.open("http://127.0.0.1")
+        except socks.ProxyConnectionError:
+            raise TorNotFoundError
+        except socks.SOCKS5Error:
+            # error because no http server is running locally
+            pass
+        doCheck = False
     return o
 
+goodPort = None
 def build_opener_default_port(ip="127.0.0.1"):
+    global goodPort
+    if goodPort:
+        return build_opener(ip=ip, port=goodPort)
     try:
         o = build_opener(ip=ip, port=9050)
+        goodPort = 9050
     except TorNotFoundError:
         o = build_opener(ip=ip, port=9150)
+        goodPort = 9150
     return o
 
 def opener():
