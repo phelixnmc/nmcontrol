@@ -1,6 +1,7 @@
 from common import *
 import plugin
 import platform
+import torgate
 
 class pluginMain(plugin.PluginThread):
     name = 'main'
@@ -9,6 +10,9 @@ class pluginMain(plugin.PluginThread):
         'debug':    ['Debug mode', 0, '<0|1>'],
         'daemon':    ['Background mode', 1, '<0|1>'],
         'confdir':    ['Configuration file directory', "<system conf dir>"],
+        'tor' : ['Use Tor', 0, '<0|1>'],
+        'torport' : ['Tor port ("' + torgate.AUTO + '" means 9050 or 9150)', torgate.AUTO],
+        'torip' : ['Tor IP address', "127.0.0.1"]
         #'plugins':    ['Load only those plugins', 'main,data,rpc'],
     }
 
