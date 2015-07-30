@@ -9,11 +9,26 @@ import traceback
 icon = "plugin/systrayicon.ico"
 hover_text = "NMControl"
 
+def open_conf_folder(app):
+    """Systray entry function."""
+    # http://stackoverflow.com/questions/41969/standard-way-to-open-a-folder-window-in-linux
+    path = app['path']['conf']
+    if os.name == "nt":  # windows
+        os.startfile(path)
+        #  workaround for pylint in case it should be necessary
+        #import subprocess
+        #subprocess.call(["cmd", "/c", "start", path])
+    elif os.name == "posix":
+        os.system('open "%s"' % path)
+    else:
+        os.system('xdg-open "%s"' % path)
+
 class pluginSystray(plugin.PluginThread):
     name = 'systray'
     options = {
         'start':    ['Launch at startup', 1],
     }
+    systrayEntry = ('Open conf folder', None, open_conf_folder)
     sti = None
 
     def gather_entries(self):
