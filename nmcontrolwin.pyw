@@ -3,6 +3,12 @@
 # On windows the file extension .pyw hides the console window
 
 try:
+    # display splashscreen
+    import sys
+    sys.path.append("lib")
+    import splashscreen
+    splashscreen.splash('lib/splash.gif')
+
     import nmcontrol
     nmcontrol.main()
 except:
