@@ -6,7 +6,7 @@ import time
 
 import traceback
 
-icon = "plugin/systrayicon.ico"
+icon = "lib/icon.ico"
 hover_text = "NMControl"
 
 class pluginSystray(plugin.PluginThread):
