@@ -9,24 +9,24 @@ import backendDataNamecoin
 
 class pluginData(plugin.PluginThread):
     name = 'data'
-    options = [
-        {'start':            ['launch at startup', 1]},
-        {'import.mode':        ['Import data at launch', 'none', '<none|all>']},
-        {'import.from':        ['Import data from', 'namecoin', '<namecoin|file>']},
-        {'import.file':        ['Import data from file ', 'data' + os.sep + 'namecoin.dat']},
-        {'import.namecoin':    ['Path of namecoin.conf', platformDep.getNamecoinDir() + os.sep + 'namecoin.conf']},
+    options = {
+        'start':            ['launch at startup', 1],
+        'import.mode':        ['Import data at launch', 'none', '<none|all>'],
+        'import.from':        ['Import data from', 'namecoin', '<namecoin|file>'],
+        'import.file':        ['Import data from file ', 'data' + os.sep + 'namecoin.dat'],
+        'import.namecoin':    ['Path of namecoin.conf', platformDep.getNamecoinDir() + os.sep + 'namecoin.conf'],
 
-        {'update.mode':        ['Update mode', 'ondemand', '<none|all|ondemand>']},
-        {'update.from':        ['Update data from', 'namecoin', '<namecoin|url|file>']},
-        {'update.freq':        ['Update data if older than', '30m', '<number>[h|m|s]']},
-        {'update.file':        ['Update data from file ', 'data' + os.sep + 'namecoin.dat']},
-        {'update.namecoin':    ['Path of namecoin.conf', platformDep.getNamecoinDir() + os.sep + 'namecoin.conf']},
+        'update.mode':        ['Update mode', 'ondemand', '<none|all|ondemand>'],
+        'update.from':        ['Update data from', 'namecoin', '<namecoin|url|file>'],
+        'update.freq':        ['Update data if older than', '30m', '<number>[h|m|s]'],
+        'update.file':        ['Update data from file ', 'data' + os.sep + 'namecoin.dat'],
+        'update.namecoin':    ['Path of namecoin.conf', platformDep.getNamecoinDir() + os.sep + 'namecoin.conf'],
 
-        {'export.mode':        ['Export mode', 'none', '<none|all>']},
-        {'export.to':        ['Export data to', 'file']},
-        {'export.freq':        ['Export data frequency', '1h', '<number>[h|m|s]']},
-        {'export.file':        ['Export data to file ', 'data' + os.sep + 'namecoin.dat']},
-    ]
+        'export.mode':        ['Export mode', 'none', '<none|all>'],
+        'export.to':        ['Export data to', 'file'],
+        'export.freq':        ['Export data frequency', '1h', '<number>[h|m|s]'],
+        'export.file':        ['Export data to file ', 'data' + os.sep + 'namecoin.dat'],
+    }
     helps = {
         'getData':    [1, 1, '<name>', 'Get raw data of a name'],
         'getValue':    [1, 1, '<name>', 'Get raw value of a name'],
