@@ -47,7 +47,7 @@ class PluginThread(threading.Thread):
         self.start2()
 
     def start2(self, arg = []):
-        if app['debug']: print "Plugin %s parent starting" %(self.name)
+        if app['debug']: print("Plugin %s parent starting" %(self.name))
         self.running = True
         # start depends
         if len(self.depends) > 0:
@@ -66,19 +66,19 @@ class PluginThread(threading.Thread):
         return self.pStart()
 
     def pStart(self, arg = []):
-        if app['debug']: print "Plugin %s parent start" %(self.name)
+        if app['debug']: print("Plugin %s parent start" %(self.name))
         #time.sleep(1)
         return True
 
     def stop(self, arg = []):
         if not self.running: return
-        if app['debug']: print "Plugin %s parent stopping" %(self.name)
+        if app['debug']: print("Plugin %s parent stopping" %(self.name))
         self.running = False
         return self.pStop()
 
     def pStop(self, arg = []):
-        if app['debug']: print "Plugin %s parent stop" %(self.name)
-        print "Plugin %s stopped" %(self.name)
+        if app['debug']: print("Plugin %s parent stop" %(self.name))
+        print("Plugin %s stopped" %(self.name))
         return True
 
     def status(self, arg = []):
@@ -89,20 +89,20 @@ class PluginThread(threading.Thread):
             return "Plugin " + self.name + " running"
 
     def reload(self, arg = []):
-        if app['debug']: print "Plugin %s parent reloading" %(self.name)
+        if app['debug']: print("Plugin %s parent reloading" %(self.name))
         return self.pReload()
 
     def pReload(self, arg = []):
-        if app['debug']: print "Plugin %s parent reload" %(self.name)
+        if app['debug']: print("Plugin %s parent reload" %(self.name))
         self.loadconfig()
         return True
 
     def restart(self, arg = []):
-        if app['debug']: print "Plugin %s parent restarting" %(self.name)
+        if app['debug']: print("Plugin %s parent restarting" %(self.name))
         return self.pRestart()
 
     def pRestart(self, arg = []):
-        if app['debug']: print "Plugin %s parent restart" %(self.name)
+        if app['debug']: print("Plugin %s parent restart" %(self.name))
         self.stop()
         self.start2()
         return True
@@ -212,7 +212,7 @@ class PluginThread(threading.Thread):
             api_user = kwargs["api_user"]
 
         if app["debug"]:
-            print method, "public function?", hasattr(func, "rpc_public")
+            print(method, "public function?", hasattr(func, "rpc_public"))
 
         if api_user != "admin" and not hasattr(func, "rpc_public"):
             raise Exception('Method "' + method + '" not allowed')

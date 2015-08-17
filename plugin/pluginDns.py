@@ -188,8 +188,8 @@ class pluginDns(plugin.PluginThread):
 
         if not isinstance (allowable, list):
             if app['debug']:
-                print "Fingerprint record", allowable, \
-                      "is not a list"
+                print("Fingerprint record", allowable, \
+                      "is not a list")
             return False
 
         fpr = self._sanitiseFingerprint (fpr)
@@ -198,7 +198,7 @@ class pluginDns(plugin.PluginThread):
                 return True
 
         if app['debug']:
-            print "No acceptable fingerprint found."
+            print("No acceptable fingerprint found.")
         return False
 
     @plugin.public

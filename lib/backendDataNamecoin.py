@@ -41,7 +41,7 @@ class backendData():
         return self._rpcSend(["name_show", name])
 
     def _rpcSend(self, rpcCmd):
-        if app['debug']: print "BackendDataNamecoin:", rpcCmd
+        if app['debug']: print("BackendDataNamecoin:", rpcCmd)
         if self.rpc is None:
             self._loadRPCConfig()
         return self.rpc.sendJson(rpcCmd)

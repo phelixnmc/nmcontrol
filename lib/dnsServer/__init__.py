@@ -58,7 +58,7 @@ class DnsServer(threading.Thread):
         try:
             udps.bind((listen_host, listen_port))
         except socket.error as e:
-            print "ERROR: Unable to start DNS server (%s)" % e
+            print("ERROR: Unable to start DNS server (%s)" % e)
         #ns_resource_records, ar_resource_records = compute_name_server_resources(_name_servers)
         ns_resource_records = ar_resource_records = []
         while self.running:

@@ -110,18 +110,18 @@ class rpcClientNamecoin(rpcClient):
 
 if __name__=='__main__':
     r = rpcClientNamecoin('127.0.0.1', 8337, 'namecoin', 'test165893741', 30)
-    print "Sending", ['getinfo']
-    print r.sendJson(['getinfo']), '\n'
-    print "Sending", ['name_show','d/ns']
-    print r.sendJson(['name_show','d/ns']), '\n'
+    print("Sending", ['getinfo'])
+    print(r.sendJson(['getinfo']), '\n')
+    print("Sending", ['name_show','d/ns'])
+    print(r.sendJson(['name_show','d/ns']), '\n')
 
     r = rpcClient('127.0.0.1', 9000)
-    print "Sending", 'test'
-    print r.send('test'), '\n'
+    print("Sending", 'test')
+    print(r.send('test'), '\n')
 
     r = rpcClient('127.0.0.1', 9000)
-    print "Sending", ['main', 'status']
-    print r.sendJson(['main', 'status']), '\n'
-    print "Sending", ['status']
-    print r.sendJson(['status']), '\n'
+    print("Sending", ['main', 'status'])
+    print(r.sendJson(['main', 'status']), '\n')
+    print("Sending", ['status'])
+    print(r.sendJson(['status']), '\n')
 
