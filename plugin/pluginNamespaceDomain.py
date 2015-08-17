@@ -32,7 +32,7 @@ class pluginNamespaceDomain(plugin.PluginThread):
             app['plugins']['dns'].handlers.append(self)
         
         if app['debug']:
-            print("Set up DNS handlers, len =", len(app['plugins']['dns'].handlers))
+            log.info("Set up DNS handlers, len =", len(app['plugins']['dns'].handlers))
 
     # specific filter for this handler
     def _handle(self, domain, recType):
@@ -46,7 +46,7 @@ class pluginNamespaceDomain(plugin.PluginThread):
         return (gTLD, gSLD, subdoms, "d/" + gSLD)
 
     def _resolve(self, domain, recType, result):
-        if app['debug']: print("Resolving :", domain, recType)
+        if app['debug']: log.info("Resolving :", domain, recType)
 
         if recType in self.supportedMethods:
             recType = self.supportedMethods[recType]
@@ -85,20 +85,20 @@ class pluginNamespaceDomain(plugin.PluginThread):
         # for each possible sub-domain, search for data
         # starting at domain which has most sub-domains up to root domain
         flatDomains.reverse()
-        if app['debug']: print("Possible domains :", flatDomains)
+        if app['debug']: log.info("Possible domains :", flatDomains)
         for subs in flatDomains:
             subData = self._fetchSubTree(nameData, subs)
             if subData is not False:
                 if self._fetchNamecoinData(domain, recType, subs, subData, result):
-                    if app['debug']: print("* result: ", json.dumps(result))
+                    if app['debug']: log.info("* result: ", json.dumps(result))
                     return result
 
-        if app['debug']: print("* result: ", json.dumps(result))
+        if app['debug']: log.info("* result: ", json.dumps(result))
         return result
 
 
     def _fetchNamecoinData(self, domain, recType, subdoms, data, result):
-        if app['debug']: print("Fetching", recType, "for", domain, "in sub-domain", subdoms)
+        if app['debug']: log.info("Fetching", recType, "for", domain, "in sub-domain", subdoms)
 
         if recType == 'tls':
             if recType in data:
@@ -168,7 +168,7 @@ class pluginNamespaceDomain(plugin.PluginThread):
 
         limit -= 1
         if limit < 0:
-            print("Too much recursive calls (%s+)" %(maxNestedCalls))
+            log.info("Too much recursive calls (%s+)" %(maxNestedCalls))
             return nameData
 
         subData = self._fetchSubTree(nameData, subDoms)
@@ -244,7 +244,7 @@ class pluginNamespaceDomain(plugin.PluginThread):
         elif reqtype == "TLSA":
             port = qdict["domain"].split(".")[0][1:]
             protocol = qdict["domain"].split(".")[1][1:]
-            answers = app['plugins']['dns'].getTlsFingerprint(qdict["domain"], protocol, port)
+            answers = app['plugins']['dns'].getTlsFingerlog.info(qdict["domain"], protocol, port)
             answers = json.loads(answers)
             return {"type":52, "class":1, "ttl":300, "data":answers}
         return

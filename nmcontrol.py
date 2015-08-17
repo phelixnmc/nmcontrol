@@ -46,7 +46,7 @@ def main():
     for argv in sys.argv:
         if argv in ['--debug=1','--main.debug=1']:
             app['debug'] = True
-            print("DEBUG MODE")
+            log.info("DEBUG MODE")
 
     # init modules
     import re
@@ -67,13 +67,13 @@ def main():
                 modulename = re.sub(r'^'+modType, '', module).lower()
                 try:
                     if app["debug"]:
-                        print("launching", modType, module)
+                        log.info("launching", modType, module)
                     importedModule = __import__(module)
                     importedClass = getattr(importedModule, module)
                     app[modType+'s'][importedClass.name] = importedClass(modType)
                     importedClass.app = app
                 except Exception as e:
-                    print("Exception when loading "+modType, module, ":", e)
+                    log.info("Exception when loading "+modType, module, ":", e)
                     traceback.print_exc()
 
     # parse command line options
@@ -96,21 +96,21 @@ def main():
     if len(app['args']) > 0 and app['args'][0] != 'start':
         error, data = app['plugins']['rpc'].pSend(app['args'][:])
         if error is True or data['error'] is True:
-            print("ERROR:", data)
+            log.info("ERROR:", data)
         else:
             if data['result']['reply'] in [None, True]:
-                print('ok')
+                log.info('ok')
             else:
-                print(data['result']['reply'])
-            if app['debug'] and data['result']['prints']: print("LOG:", data['result']['prints'])
+                log.info(data['result']['reply'])
+            if app['debug'] and data['result']['prints']: log.info("LOG:", data['result']['prints'])
         if app['args'][0] != 'restart':
             return
 
     # daemon mode
     if os.name == "nt":  # MS Windows
-        print("Daemon mode not possible on MS Windows.")
+        log.info("Daemon mode not possible on MS Windows.")
     elif int(app['plugins']['main'].conf['daemon']) == 1:
-        print("Entering background mode")
+        log.info("Entering background mode")
         import daemonize
         retCode = daemonize.createDaemon()
 
@@ -123,7 +123,7 @@ def main():
             if app['plugins'][plugin].running is False:
                 app['plugins'][plugin].start()
                 plugins_started.append(app['plugins'][plugin].name)
-    print("Plugins started :", ', '.join(plugins_started))
+    log.info("Plugins started :", ', '.join(plugins_started))
 
     for plugin in app['plugins']:
         if app['plugins'][plugin].__dict__.has_key("criticalStartException") and app['plugins'][plugin].criticalStartException:
@@ -139,7 +139,7 @@ def main():
     try:
         app['plugins']['main'].start2()
     except (KeyboardInterrupt, SystemExit):
-        print('\n! Received keyboard interrupt, quitting threads.\n')
+        log.info('\n! Received keyboard interrupt, quitting threads.\n')
 
     # stop main program
     app['plugins']['main'].stop()

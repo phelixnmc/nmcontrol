@@ -189,11 +189,11 @@ class DnsRequest:
         else:
             qtype=self.args['qtype']
         if not self.args.has_key('name'):
-            print(self.args)
+            log.info(self.args)
             raise DNSError,'nothing to lookup'
         qname = self.args['name']
         if qtype == Type.AXFR:
-            print('Query type AXFR, protocol forced to TCP')
+            log.info('Query type AXFR, protocol forced to TCP')
             protocol = 'tcp'
         #print 'QTYPE %d(%s)' % (qtype, Type.typestr(qtype))
         m = Lib.Mpacker()

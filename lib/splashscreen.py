@@ -61,4 +61,4 @@ def splash(gifFile):
 
 if __name__ == "__main__":
     splash()
-    print("done")
+    log.info("done")

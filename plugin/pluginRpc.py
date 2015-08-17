@@ -30,26 +30,26 @@ class pluginRpc(plugin.PluginThread):
                     self.threads.append(c)
                 except Exception as e:
                     if app['debug'] and str(e) != "timed out":
-                        print("except:", e)
+                        log.info("except:", e)
         except KeyboardInterrupt:
             pass
         except:
-            print("nmc-manager: unable to listen on port")
+            log.info("nmc-manager: unable to listen on port")
             if app['debug']: traceback.print_exc()
 
         # close all threads
-        if app['debug']: print("RPC stop listening")
+        if app['debug']: log.info("RPC stop listening")
         self.s.close()
         for c in self.threads:
             c.join()
 
     def pStop(self):
-        if app['debug']: print("Plugin stop :", self.name)
+        if app['debug']: log.info("Plugin stop :", self.name)
         self.pSend(['exit'])
-        print("Plugin %s stopped" %(self.name))
+        log.info("Plugin %s stopped" %(self.name))
 
     def pSend(self, args):
-        if app['debug']: print("RPC - sending cmd :", args)
+        if app['debug']: log.info("RPC - sending cmd :", args)
         r = rpcClient.rpcClient(self.conf['host'], int(self.conf['port']))
         error, data = r.sendJson(args)
         return error, data
@@ -62,10 +62,10 @@ class pluginRpc(plugin.PluginThread):
             s.sendall(json.dumps(args))
             data = s.recv(4096)
             s.close()
-            if app['debug']: print('RPC - received data : ', repr(data))
+            if app['debug']: log.info('RPC - received data : ', repr(data))
             data = json.loads(data)
             if app['debug'] and 'result' in data and 'prints' in data['result']:
-                print(data['result']['prints'])
+                log.info(data['result']['prints'])
 
             if data['error'] is None:
                 return data['result']['reply']
@@ -73,8 +73,8 @@ class pluginRpc(plugin.PluginThread):
                 return "ERROR: " + data['result']
 
         except Exception, e:
-            print("ERROR: unable to send request. Is program started ?")
-            print(e)
+            log.info("ERROR: unable to send request. Is program started ?")
+            log.info(e)
             s.close()
             return False
 
@@ -147,7 +147,7 @@ class rpcClientThread(threading.Thread):
 
         # can't call private/protected methods
         if method[0] == '_':
-            if app['debug']: print("RPC - forbidden cmd :", args)
+            if app['debug']: log.info("RPC - forbidden cmd :", args)
             return (True, 'Method "' + params[0] + '" not allowed')
 
         # help asked on a method
@@ -161,7 +161,7 @@ class rpcClientThread(threading.Thread):
             params.insert(0, method)
             method = 'help'
 
-        if app['debug']: print("RPC - executing cmd :", plugin, method, params)
+        if app['debug']: log.info("RPC - executing cmd :", plugin, method, params)
 
         # capture stdout
         capture = StringIO.StringIO()

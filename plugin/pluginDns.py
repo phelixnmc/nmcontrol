@@ -174,7 +174,7 @@ class pluginDns(plugin.PluginThread):
         return self._getRecordForRPC(domain, 'getFreenet')
 
     @plugin.public
-    def getFingerprint(self, domain):
+    def getFingerlog.info(self, domain):
         return self._getRecordForRPC(domain, 'getFingerprint')
 
     @plugin.public
@@ -188,7 +188,7 @@ class pluginDns(plugin.PluginThread):
 
         if not isinstance (allowable, list):
             if app['debug']:
-                print("Fingerprint record", allowable, \
+                log.info("Fingerprint record", allowable, \
                       "is not a list")
             return False
 
@@ -198,11 +198,11 @@ class pluginDns(plugin.PluginThread):
                 return True
 
         if app['debug']:
-            print("No acceptable fingerprint found.")
+            log.info("No acceptable fingerprint found.")
         return False
 
     @plugin.public
-    def getTlsFingerprint(self, domain, protocol, port):
+    def getTlsFingerlog.info(self, domain, protocol, port):
         #return tls data for the queried FQDN, or the first includeSubdomain tls record
         result = self._getTls(domain)
 
@@ -216,7 +216,7 @@ class pluginDns(plugin.PluginThread):
             answer = tls[protocol][port]
         except:
             try:
-                answer = self._getSubDomainTlsFingerprint(domain, protocol, port)[protocol][port]
+                answer = self._getSubDomainTlsFingerlog.info(domain, protocol, port)[protocol][port]
             except:
                 return []
 
@@ -281,7 +281,7 @@ class pluginDns(plugin.PluginThread):
 
         return app['services']['dns']._lookup(domain, 28 , server)[0]['data']
 
-    def _getSubDomainTlsFingerprint(self,domain,protocol,port):
+    def _getSubDomainTlsFingerlog.info(self,domain,protocol,port):
         #Get the first subdomain tls fingerprint that has the includeSubdomain flag turned on
         for i in xrange(0,domain.count('.')):
 

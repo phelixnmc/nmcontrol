@@ -56,7 +56,7 @@ def call_plugin(plugin, method, args):
     
         # can't call private/protected methods
         if method[0] == '_':
-            if app['debug']: print("RPC - forbidden cmd :", "/" + "/".join([plugin, method, arg1]) + ".json")
+            if app['debug']: log.info("RPC - forbidden cmd :", "/" + "/".join([plugin, method, arg1]) + ".json")
             raise Exception('Method "' + method + '" not allowed')
     
         """
@@ -72,7 +72,7 @@ def call_plugin(plugin, method, args):
             method = 'help'
         """
     
-        if app['debug']: print("HTTP - executing cmd :", plugin, method, params)
+        if app['debug']: log.info("HTTP - executing cmd :", plugin, method, params)
     
         # capture stdout
         capture = StringIO.StringIO()
@@ -118,7 +118,7 @@ class pluginHttp(plugin.PluginThread):
 
     def pStart(self):
         if app['debug']:
-            print("Starting HTTP server...")
+            log.info("Starting HTTP server...")
         
         run(host=self.conf['host'], port=int(self.conf['port']))
         
@@ -126,11 +126,11 @@ class pluginHttp(plugin.PluginThread):
         return True
 
     def pStop(self):
-        if app['debug']: print("Plugin stop :", self.name)
+        if app['debug']: log.info("Plugin stop :", self.name)
         
         # TODO
         
-        print("Plugin %s stopped" %(self.name))
+        log.info("Plugin %s stopped" %(self.name))
         return True
 
     def pSend(self, args):

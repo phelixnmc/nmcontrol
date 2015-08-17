@@ -98,7 +98,7 @@ class SysTrayIcon(object):
                                self._add_ids_to_menu_options(option_action),
                                self._next_action_id))
             else:
-                print('Unknown item', option_text, option_icon, option_action)
+                log.info('Unknown item', option_text, option_icon, option_action)
             self._next_action_id += 1
         return result
 
@@ -114,7 +114,7 @@ class SysTrayIcon(object):
                                        0,
                                        icon_flags)
         else:
-            print("Can't find icon file - using default.")
+            log.info("Can't find icon file - using default.")
             hicon = win32gui.LoadIcon(0, win32con.IDI_APPLICATION)
 
         if self.notify_id: message = win32gui.NIM_MODIFY
@@ -216,9 +216,9 @@ class SysTrayIcon(object):
             menu_action(self.app)
 
     def do_quit(self):
-        print("do_quit-------------")
+        log.info("do_quit-------------")
         if self.running:
-            print("quitting-------------")
+            log.info("quitting-------------")
             win32gui.DestroyWindow(self.hwnd)
             self.running = False
 
@@ -239,8 +239,8 @@ if __name__ == '__main__':
     icon = "favicon.ico"
     hover_text = "NMControl"
 
-    def hello(sysTrayIcon): print("Hello World.")
-    def simon(sysTrayIcon): print("Hello Simon.")
+    def hello(sysTrayIcon): log.info("Hello World.")
+    def simon(sysTrayIcon): log.info("Hello Simon.")
 
     menu_options = (('Say Hello', icon, hello),
                     #('Switch Icon', None, switch_icon),
@@ -248,6 +248,6 @@ if __name__ == '__main__':
                       #                            ('Switch Icon', icon, switch_icon),
                                                  ))
                    )
-    def bye(sysTrayIcon): print('Bye, then.')
+    def bye(sysTrayIcon): log.info('Bye, then.')
 
     SysTrayIcon(icon, hover_text, menu_options, on_quit=bye, default_menu_index=1)
