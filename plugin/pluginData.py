@@ -7,6 +7,8 @@ import platformDep
 import backendDataFile
 import backendDataNamecoin
 
+log = get_logger(__name__)
+
 class pluginData(plugin.PluginThread):
     name = 'data'
     options = {
@@ -72,7 +74,7 @@ class pluginData(plugin.PluginThread):
 
         # load import backend
         if self.conf['import.mode'] == 'all':
-            if app['debug']: log.info("Plugin Data : loading...", end=' ')
+            log.debug("Plugin Data : loading...", end=' ')
             sys.stdout.flush()
             importedModule = __import__('backendData' + self.conf['import.from'].capitalize())
             importedClass = getattr(importedModule, 'backendData')
@@ -84,7 +86,7 @@ class pluginData(plugin.PluginThread):
             for name in self.data:
                 if 'expires_at' not in self.data[name]:
                     self.data[name]['expires_at'] = int(time.time() + self.conf['update.freq'])
-            if app['debug']: log.info(len(self.data), "names loaded")
+            log.debug(len(self.data), "names loaded")
 
         # load update backend
         if self.conf['update.mode'] != 'none':
@@ -105,8 +107,7 @@ class pluginData(plugin.PluginThread):
             if error is None:
 
                 if 'expired' in data and data['expired']:
-                    if app['debug']:
-                        log.info(name, 'is expired in the blockchain.')
+                    log.debug(name, 'is expired in the blockchain.')
                     return False
 
                 data['expires_at'] = int(time.time() + self.conf['update.freq'])
@@ -136,7 +137,7 @@ class pluginData(plugin.PluginThread):
         try:
             data = json.loads(data)
         except:
-            if app['debug']: traceback.print_exc()
+            log.debug("getValueProcessed", exc_info=1)
             return False
 
         # handle imports
@@ -170,8 +171,7 @@ class pluginData(plugin.PluginThread):
 
     # process "import" on the given JSON object
     def _processImport(self, data, limit = maxNestedCalls):
-        if app['debug']:
-            log.info("Processing import for", data)
+        log.debug("Processing import for", data)
 
         if limit < 1:
             log.info("Too many recursive calls.")
@@ -179,8 +179,7 @@ class pluginData(plugin.PluginThread):
 
         if 'import' in data:
             impName = data['import']
-            if app['debug']:
-                log.info("Recursing import on", impName)
+            log.debug("Recursing import on", impName)
 
             # TODO: Maybe rewrite to use an internal, more
             # general 'getValueProcessed' routine here instead
@@ -191,7 +190,7 @@ class pluginData(plugin.PluginThread):
             try:
                 impData = json.loads(impData)
             except:
-                if app['debug']: traceback.print_exc()
+                log.debug("_processImport", exc_info=1)
                 # XXX: Maybe return data here instead of fail?
                 return False
 

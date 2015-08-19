@@ -2,6 +2,8 @@ from common import *
 import plugin
 import platform
 
+log = get_logger(__name__)
+
 class pluginMain(plugin.PluginThread):
     name = 'main'
     options = {
@@ -27,7 +29,7 @@ class pluginMain(plugin.PluginThread):
 
     def pStop(self):
         self.running = False
-        if app['debug']:    log.info("Plugin %s stopping" %(self.name))
+        log.debug("Plugin %s stopping" %(self.name))
         for plugin in app['plugins']:
             if plugin == "rpc":  # rpc plugin seems to shut down everything
                 continue
@@ -42,8 +44,6 @@ class pluginMain(plugin.PluginThread):
 
     def pLoadconfig(self):
         self.conf['start'] = 1
-        if 'debug' in app:
-            self.conf['debug'] = app['debug']
 
     def pHelp(self, args = []):
         help = plugin.PluginThread.pHelp(self, args)

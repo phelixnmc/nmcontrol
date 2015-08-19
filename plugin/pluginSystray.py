@@ -6,6 +6,8 @@ import time
 
 import traceback
 
+log = common.get_logger(__name__)
+
 icon = "plugin/systrayicon.ico"
 hover_text = "NMControl"
 
@@ -28,7 +30,7 @@ class pluginSystray(plugin.PluginThread):
     def pStart(self):
         if self.sti:
             return
-        if self.app['debug']: log.info("Systray.py: Plugin %s parent start" %(self.name))
+        log.debug("Systray.py: Plugin %s parent start" %(self.name))
         self.menu_options = self.gather_entries()
         try:
             if os.name == "nt":
@@ -56,7 +58,7 @@ class pluginSystray(plugin.PluginThread):
         self.halted = 1
 
     def pStop(self, arg = []):
-        if common.app['debug']: log.info("Plugin %s parent stop" %(self.name))
+        log.debug("Plugin %s parent stop" %(self.name))
         if not self.running:
             return True
         while not self.halted:
@@ -65,5 +67,5 @@ class pluginSystray(plugin.PluginThread):
         return True
 
     def do_quit(self, sti):
-        if common.app['debug']: log.info("Systray.py: do_quit")
+        log.debug("Systray.py: do_quit")
         common.app['plugins']['main'].stop()  # will bail if already shutting down

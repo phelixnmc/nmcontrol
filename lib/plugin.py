@@ -9,6 +9,8 @@ from ConfigParser import SafeConfigParser
 import inspect
 import json
 
+log = get_logger(__name__)
+
 def public(func):
     func.rpc_public = True
     return func
@@ -47,7 +49,7 @@ class PluginThread(threading.Thread):
         self.start2()
 
     def start2(self, arg = []):
-        if app['debug']: log.info("Plugin %s parent starting" %(self.name))
+        log.debug("Plugin %s parent starting" %(self.name))
         self.running = True
         # start depends
         if len(self.depends) > 0:
@@ -66,18 +68,18 @@ class PluginThread(threading.Thread):
         return self.pStart()
 
     def pStart(self, arg = []):
-        if app['debug']: log.info("Plugin %s parent start" %(self.name))
+        log.debug("Plugin %s parent start" %(self.name))
         #time.sleep(1)
         return True
 
     def stop(self, arg = []):
         if not self.running: return
-        if app['debug']: log.info("Plugin %s parent stopping" %(self.name))
+        log.debug("Plugin %s parent stopping" %(self.name))
         self.running = False
         return self.pStop()
 
     def pStop(self, arg = []):
-        if app['debug']: log.info("Plugin %s parent stop" %(self.name))
+        log.debug("Plugin %s parent stop" %(self.name))
         log.info("Plugin %s stopped" %(self.name))
         return True
 
@@ -89,20 +91,20 @@ class PluginThread(threading.Thread):
             return "Plugin " + self.name + " running"
 
     def reload(self, arg = []):
-        if app['debug']: log.info("Plugin %s parent reloading" %(self.name))
+        log.debug("Plugin %s parent reloading" %(self.name))
         return self.pReload()
 
     def pReload(self, arg = []):
-        if app['debug']: log.info("Plugin %s parent reload" %(self.name))
+        log.debug("Plugin %s parent reload" %(self.name))
         self.loadconfig()
         return True
 
     def restart(self, arg = []):
-        if app['debug']: log.info("Plugin %s parent restarting" %(self.name))
+        log.debug("Plugin %s parent restarting" %(self.name))
         return self.pRestart()
 
     def pRestart(self, arg = []):
-        if app['debug']: log.info("Plugin %s parent restart" %(self.name))
+        log.debug("Plugin %s parent restart" %(self.name))
         self.stop()
         self.start2()
         return True
@@ -211,8 +213,7 @@ class PluginThread(threading.Thread):
         else:
             api_user = kwargs["api_user"]
 
-        if app["debug"]:
-            log.info(method, "public function?", hasattr(func, "rpc_public"))
+        log.debug(method, "public function?", hasattr(func, "rpc_public"))
 
         if api_user != "admin" and not hasattr(func, "rpc_public"):
             raise Exception('Method "' + method + '" not allowed')

@@ -34,19 +34,18 @@ def main():
     import common
     common.app = app
 
-    log = common.get_logger(__name__)
-
     import console
     (cWidth, cHeight) = console.getTerminalSize()
     fmt=optparse.IndentedHelpFormatter(indent_increment=4, max_help_position=40, width=cWidth-3, short_first=1 )
     app['parser'] = optparse.OptionParser(formatter=fmt,description='nmcontrol %s' % __version__)
-    app['debug'] = False
 
     # debug mode
-    for argv in sys.argv:
-        if argv in ['--debug=1','--main.debug=1']:
-            app['debug'] = True
-            log.info("DEBUG MODE")
+    app['debug'] = False
+    if '--debug=1' in sys.argv or '--main.debug=1' in sys.argv:
+        app['debug'] = True
+
+    log = common.get_logger(__name__)
+    log.debug("DEBUG MODE")
 
     # init modules
     import re
@@ -66,15 +65,13 @@ def main():
                 module = re.sub(r'\.py$', '', module)
                 modulename = re.sub(r'^'+modType, '', module).lower()
                 try:
-                    if app["debug"]:
-                        log.info("launching", modType, module)
+                    log.debug("launching", modType, module)
                     importedModule = __import__(module)
                     importedClass = getattr(importedModule, module)
                     app[modType+'s'][importedClass.name] = importedClass(modType)
                     importedClass.app = app
                 except Exception as e:
-                    log.info("Exception when loading "+modType, module, ":", e)
-                    traceback.print_exc()
+                    log.exception("Exception when loading " + modType, module, ":", e)
 
     # parse command line options
     # Note: There should not be plugins and services with the same name
@@ -96,13 +93,14 @@ def main():
     if len(app['args']) > 0 and app['args'][0] != 'start':
         error, data = app['plugins']['rpc'].pSend(app['args'][:])
         if error is True or data['error'] is True:
-            log.info("ERROR:", data)
+            print "ERROR:", data
         else:
             if data['result']['reply'] in [None, True]:
-                log.info('ok')
+                print 'ok'
             else:
-                log.info(data['result']['reply'])
-            if app['debug'] and data['result']['prints']: log.info("LOG:", data['result']['prints'])
+                print data['result']['reply']
+            if data['result']['prints']:
+                log.debug("LOG:", data['result']['prints'])
         if app['args'][0] != 'restart':
             return
 

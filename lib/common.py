@@ -4,9 +4,9 @@ app = {}
 
 # logging
 
-logFilenamePath = None
+LOGFILENAME = "log.txt"
 
-imports sys
+import sys
 sys.path.append("lib")
 import mylogging
 
@@ -14,8 +14,8 @@ def get_logger(name):
     global app
 
     level = mylogging.INFO
-    if app["debug"]:
+    if app['debug']:
         level = mylogging.DEBUG
 
-    logFilenamePath = app["path"]["conf"] + "/" + "log.txt"
+    logFilenamePath = app["path"]["conf"] + "/" + LOGFILENAME
     return mylogging.get_my_logger(name, levelConsole=level, filename=logFilenamePath, levelFile=level)

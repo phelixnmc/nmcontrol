@@ -38,6 +38,8 @@ import threading
 from utils import *
 from common import *
 
+log = get_logger(__name__)
+
 class DnsError(Exception):
     pass
 
@@ -58,7 +60,7 @@ class DnsServer(threading.Thread):
         try:
             udps.bind((listen_host, listen_port))
         except socket.error as e:
-            log.info("ERROR: Unable to start DNS server (%s)" % e)
+            log.exception("ERROR: Unable to start DNS server (%s)" % e)
         #ns_resource_records, ar_resource_records = compute_name_server_resources(_name_servers)
         ns_resource_records = ar_resource_records = []
         while self.running:
@@ -102,7 +104,7 @@ class DnsServer(threading.Thread):
                     exception_rcode = 3
                     raise Exception("query is not for our domain: %s" % ".".join(question))
             except:
-                if app['debug']: traceback.print_exc()
+                log.debug("oops", exc_info=1)
                 if not self.running:
                     continue
                 if qid:

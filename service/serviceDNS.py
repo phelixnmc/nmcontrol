@@ -4,6 +4,8 @@ import DNS
 import dnsServer
 import random, re
 
+log = get_logger(__name__)
+
 class serviceDNS(plugin.PluginThread):
     name = 'dns'
     options = {
@@ -20,18 +22,18 @@ class serviceDNS(plugin.PluginThread):
         if self.srv is None:
             self.srv = dnsServer.DnsServer()
             self.srv.start()
-        if app['debug']: log.info("Service %s started" %(self.name))
+        log.debug("Service %s started" %(self.name))
         return True
 
     def pStop(self):
         if self.srv is not None:
             self.srv.stop()
             self.srv = None
-        if app['debug']: log.info("Service %s stopped" %(self.name))
+        log.debug("Service %s stopped" %(self.name))
         return True
 
     def lookup(self, qdict) :
-        if app['debug']: log.info('Lookup:', qdict)
+        log.debug('Lookup:', qdict)
         #for service, value in self.services.iteritems():
         #    if re.search(value['filter'], qdict["domain"]):
         #        return app['plugins'][service].lookup(qdict)
@@ -48,12 +50,12 @@ class serviceDNS(plugin.PluginThread):
         if server == '':
             server = self.servers[random.randrange(0, len(self.servers)-1)]
 
-        if app['debug']: log.info("Fetching IP Address for: ", domain, "with NS Server:", server)
+        log.debug("Fetching IP Address for: ", domain, "with NS Server:", server)
 
         x = DNS.Request(server=server)
         result = x.req(name=domain, qtype=qtype).answers
 
-        if app['debug']: log.info("* result: ", result)
+        log.debug("* result: ", result)
 
         return result
 
