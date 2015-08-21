@@ -8,7 +8,7 @@ import platformDep
 
 LOGFILENAME = "log.txt"
 
-def get_logger(name):
+def get_logger(name, clear=False):
     global app
 
     level = mylogging.INFO
@@ -16,4 +16,5 @@ def get_logger(name):
         level = mylogging.DEBUG
 
     logFilenamePath = platformDep.getNmcontrolDir() + "/" + LOGFILENAME
-    return mylogging.get_my_logger(name, levelConsole=level, filename=logFilenamePath, levelFile=level)
+    return mylogging.get_my_logger(name, levelConsole=level, filename=logFilenamePath,
+                                   levelFile=level, clear=clear)

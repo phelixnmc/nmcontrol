@@ -44,7 +44,7 @@ def main():
     if '--debug=1' in sys.argv or '--main.debug=1' in sys.argv:
         app['debug'] = True
 
-    log = common.get_logger(__name__)
+    log = common.get_logger(__name__, clear=True)
     log.info("###################################################################################")
     log.debug("DEBUG MODE")
 
