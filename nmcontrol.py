@@ -45,6 +45,7 @@ def main():
         app['debug'] = True
 
     log = common.get_logger(__name__)
+    log.info("###################################################################################")
     log.debug("DEBUG MODE")
 
     # init modules
