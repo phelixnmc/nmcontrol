@@ -1,33 +1,38 @@
 # -*- coding: utf-8 -*-
+"""
+MIT license
 
-# MIT license
+Screen and file logger. Supports print() style arguments and encoded strings.
+
+"""
 
 from logging import *
 
-def s(*args):
+def join_args_unicode(*args):
+    """Join arguments as unicode string representations."""
     args2 = []
-    for a in args:
-        if type(a) == str:
+    for arg in args:
+        try:
+            arg = unicode(arg)
+        except UnicodeDecodeError:
             try:
-                a = a.decode("utf-8")
-            except:
-                a = a.decode("cp1252")
-        if type(a) != unicode:
-            a = unicode(a)
-        args2.append(a)
-    s = " ".join(args2)
-    return s
+                arg = arg.decode("utf-8")
+            except UnicodeDecodeError:
+                arg = arg.decode("cp1252")
+        args2.append(arg)
+    return " ".join(args2)
 
-# monkey patch to be able to use logging similar to print (plus unicode)
-_logOriginal = Logger._log
-def _log_my(self, level, msg, args, **kwargs):
-    if args:
-        msg = s(msg) + " " + s(*args)
+class MyLogger(Logger):
+    """Modified logging class to be able to digest several arguments similar to print().
+Also support encoded strings."""
+    def _log(self, level, msg, args, **kwargs):
+        msg = join_args_unicode(*((msg,) + args))
         args = ()
-    _logOriginal(self, level, msg, args, **kwargs)
-Logger._log = _log_my  # instances should be updated, too
+        Logger._log(self, level, msg, args, **kwargs)
+setLoggerClass(MyLogger)
 
 def get_my_logger(name=None, levelConsole=INFO, filename=None, levelFile=DEBUG, clear=False):
+    """Logger logging to both screen and file as configured."""
     # create formatter
     formatter = Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
