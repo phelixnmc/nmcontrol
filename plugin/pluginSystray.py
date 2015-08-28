@@ -18,10 +18,10 @@ def open_conf_folder(app):
         #  workaround for pylint in case it should be necessary
         #import subprocess
         #subprocess.call(["cmd", "/c", "start", path])
-    elif os.name == "posix":
-        os.system('open "%s"' % path)
-    else:
+    elif os.name == "posix":  # linux
         os.system('xdg-open "%s"' % path)
+    else:  # osx
+        os.system('open "%s"' % path)
 
 class pluginSystray(plugin.PluginThread):
     name = 'systray'
