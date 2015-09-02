@@ -8,7 +8,7 @@ import traceback
 
 log = common.get_logger(__name__)
 
-icon = "plugin/systrayicon.ico"
+icon = "lib/icon.ico"
 hover_text = "NMControl"
 
 class pluginSystray(plugin.PluginThread):

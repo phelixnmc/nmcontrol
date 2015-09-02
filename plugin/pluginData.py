@@ -119,6 +119,21 @@ class pluginData(plugin.PluginThread):
             return False
 
     @plugin.public
+    def getNamespace(self, name, level='1'):
+        level = int(level)
+        tokens = name.split('/')
+        namespace_tokens = tokens[:level]
+        namespace = '/'.join(namespace_tokens)
+        return namespace
+    
+    @plugin.public
+    def stripNamespace(self, name, level='1'):
+        namespace = self.getNamespace(name, level)
+        stripLength = len(namespace + '/')
+        result = name[stripLength:]
+        return result
+    
+    @plugin.public
     def getValue(self, name):
         data = self.getData(name)
 

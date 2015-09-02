@@ -57,3 +57,7 @@ All non-dangerous methods should be available via REST.  Potentially dangerous m
 When accessing a method which takes multiple arguments, the arguments should be separated by a space character (%20 in the URL).
 
 Note that we are **not** committing to a stable API at this point, so consider the REST feature to be experimental.
+
+Developer Notes
+============
+The windows build system consisting of the PyInstaller batch files "build_windows_gui.bat" and "build_windows_console.bat" as well as the InnoSetup "setup_script.iss" might be replaced with something different in the future.
