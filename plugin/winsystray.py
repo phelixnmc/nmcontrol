@@ -98,7 +98,7 @@ class SysTrayIcon(object):
                                self._add_ids_to_menu_options(option_action),
                                self._next_action_id))
             else:
-                print 'Unknown item', option_text, option_icon, option_action
+                raise Exception('winsystray: Unknown item %s %s %s' % ( option_text, option_icon, option_action))
             self._next_action_id += 1
         return result
 
@@ -114,7 +114,7 @@ class SysTrayIcon(object):
                                        0,
                                        icon_flags)
         else:
-            print "Can't find icon file - using default."
+            raise Exception("winsystray: Can't find icon file.")
             hicon = win32gui.LoadIcon(0, win32con.IDI_APPLICATION)
 
         if self.notify_id: message = win32gui.NIM_MODIFY
@@ -216,9 +216,7 @@ class SysTrayIcon(object):
             menu_action(self.app)
 
     def do_quit(self):
-        print "do_quit-------------"
         if self.running:
-            print "quitting-------------"
             win32gui.DestroyWindow(self.hwnd)
             self.running = False
 

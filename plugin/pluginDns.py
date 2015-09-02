@@ -5,6 +5,8 @@ import plugin
 import re, json
 import random
 
+log = get_logger(__name__)
+
 class dnsResult(dict):
 
     def add(self, domain, recType, record):
@@ -124,7 +126,7 @@ class pluginDns(plugin.PluginThread):
         self._resolve(domain, recType, result)
 
         return result.toJsonForRPC()
-    
+
     @plugin.public
     def getIp4(self, domain):
         result = self._getRecordForRPC(domain, 'getIp4')
@@ -183,13 +185,12 @@ class pluginDns(plugin.PluginThread):
         try:
             allowable = json.loads (allowable)
         except:
-            if app['debug']: traceback.print_exc ()
+            log.debug("verifyFingerprint", exc_info=True)
             return False
 
         if not isinstance (allowable, list):
-            if app['debug']:
-                print "Fingerprint record", allowable, \
-                      "is not a list"
+            log.debug("Fingerprint record", allowable, \
+                      "is not a list")
             return False
 
         fpr = self._sanitiseFingerprint (fpr)
@@ -197,8 +198,7 @@ class pluginDns(plugin.PluginThread):
             if self._sanitiseFingerprint (a) == fpr:
                 return True
 
-        if app['debug']:
-            print "No acceptable fingerprint found."
+        log.debug("No acceptable fingerprint found.")
         return False
 
     @plugin.public
@@ -209,7 +209,7 @@ class pluginDns(plugin.PluginThread):
         try:
             tls = json.loads(result)
         except:
-            if app['debug']: traceback.print_exc()
+            log.debug("oops", exc_info=1)
             return
 
         try:
@@ -241,7 +241,7 @@ class pluginDns(plugin.PluginThread):
         try:
             servers = json.loads(item)
         except:
-            if app['debug']: traceback.print_exc()
+            log.debug("oops", exc_info=1)
             return
 
         server = servers[random.randrange(0, len(servers))]
@@ -257,7 +257,7 @@ class pluginDns(plugin.PluginThread):
             try:
                 translate = json.loads(translate)
             except:
-                if app['debug']: traceback.print_exc()
+                log.debug("oops", exc_info=1)
                 return
 
             domain = translate[0].rstrip('.')
@@ -274,7 +274,7 @@ class pluginDns(plugin.PluginThread):
             try:
                 translate = json.loads(translate)
             except:
-                if app['debug']: traceback.print_exc()
+                log.debug("oops", exc_info=1)
                 return
 
             domain = translate[0].rstrip('.')
@@ -292,7 +292,7 @@ class pluginDns(plugin.PluginThread):
             try:
                 tls = json.loads(result)
             except:
-                if app['debug']: traceback.print_exc()
+                log.debug("oops", exc_info=1)
                 return
 
             try:

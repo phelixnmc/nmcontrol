@@ -2,6 +2,8 @@ from common import *
 import rpcClient
 import ConfigParser, StringIO
 
+log = get_logger(__name__)
+
 class backendData():
     def __init__(self, conf):
         self.conf = conf
@@ -41,7 +43,7 @@ class backendData():
         return self._rpcSend(["name_show", name])
 
     def _rpcSend(self, rpcCmd):
-        if app['debug']: print "BackendDataNamecoin:", rpcCmd
+        log.debug("BackendDataNamecoin:", rpcCmd)
         if self.rpc is None:
             self._loadRPCConfig()
         return self.rpc.sendJson(rpcCmd)

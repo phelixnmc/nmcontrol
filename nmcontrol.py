@@ -38,13 +38,15 @@ def main():
     (cWidth, cHeight) = console.getTerminalSize()
     fmt=optparse.IndentedHelpFormatter(indent_increment=4, max_help_position=40, width=cWidth-3, short_first=1 )
     app['parser'] = optparse.OptionParser(formatter=fmt,description='nmcontrol %s' % __version__)
-    app['debug'] = False
 
     # debug mode
-    for argv in sys.argv:
-        if argv in ['--debug=1','--main.debug=1']:
-            app['debug'] = True
-            print "DEBUG MODE"
+    app['debug'] = False
+    if '--debug=1' in sys.argv or '--main.debug=1' in sys.argv:
+        app['debug'] = True
+
+    log = common.get_logger(__name__, clear=True)
+    log.info("###################################################################################")
+    log.debug("DEBUG MODE")
 
     # init modules
     import re
@@ -64,15 +66,13 @@ def main():
                 module = re.sub(r'\.py$', '', module)
                 modulename = re.sub(r'^'+modType, '', module).lower()
                 try:
-                    if app["debug"]:
-                        print "launching", modType, module
+                    log.debug("launching", modType, module)
                     importedModule = __import__(module)
                     importedClass = getattr(importedModule, module)
                     app[modType+'s'][importedClass.name] = importedClass(modType)
                     importedClass.app = app
                 except Exception as e:
-                    print "Exception when loading "+modType, module, ":", e
-                    traceback.print_exc()
+                    log.exception("Exception when loading " + modType, module, ":", e)
 
     # parse command line options
     # Note: There should not be plugins and services with the same name
@@ -100,15 +100,16 @@ def main():
                 print 'ok'
             else:
                 print data['result']['reply']
-            if app['debug'] and data['result']['prints']: print "LOG:", data['result']['prints']
+            if data['result']['prints']:
+                log.debug("LOG:", data['result']['prints'])
         if app['args'][0] != 'restart':
             return
 
     # daemon mode
     if os.name == "nt":  # MS Windows
-        print "Daemon mode not possible on MS Windows."
+        log.info("Daemon mode not possible on MS Windows.")
     elif int(app['plugins']['main'].conf['daemon']) == 1:
-        print "Entering background mode"
+        log.info("Entering background mode")
         import daemonize
         retCode = daemonize.createDaemon()
 
@@ -121,7 +122,7 @@ def main():
             if app['plugins'][plugin].running is False:
                 app['plugins'][plugin].start()
                 plugins_started.append(app['plugins'][plugin].name)
-    print "Plugins started :", ', '.join(plugins_started)
+    log.info("Plugins started :", ', '.join(plugins_started))
 
     for plugin in app['plugins']:
         if app['plugins'][plugin].__dict__.has_key("criticalStartException") and app['plugins'][plugin].criticalStartException:
@@ -137,7 +138,7 @@ def main():
     try:
         app['plugins']['main'].start2()
     except (KeyboardInterrupt, SystemExit):
-        print '\n! Received keyboard interrupt, quitting threads.\n'
+        log.info('\n! Received keyboard interrupt, quitting threads.\n')
 
     # stop main program
     app['plugins']['main'].stop()

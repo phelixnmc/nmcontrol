@@ -1,6 +1,8 @@
 import DNS
-import json, base64, types, traceback
+import json, base64, types
 from common import *
+
+log = get_logger(__name__)
 
 def lookup(sp, qdict) :
     domain = qdict["domain"]
@@ -16,7 +18,7 @@ def lookup(sp, qdict) :
     try:
         item = json.loads(item)
     except:
-        if app['debug']: traceback.print_exc()
+        log.debug("lookup", exc_info=True)
         return
 
     if str(item[u"name"]) == "d/" +  host :
@@ -41,8 +43,9 @@ def lookup(sp, qdict) :
                             return dnslookup(value, u"", qdict)
                         return str(value[u"map"][u""])
         except :
+            log.debug("lookup", exc_info=True)
             return
-            traceback.print_exc()
+
 def dnslookup(value, key, qdict) :
     if value[u"map"][key].has_key(u"ns") :
         x = DnsClient.Request(server="8.8.8.8")
