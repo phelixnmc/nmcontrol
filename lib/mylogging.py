@@ -6,6 +6,15 @@ Screen and file logger. Supports print() style arguments and encoded strings.
 
 """
 
+import os
+
+def ensure_dirs(path):
+    try:
+        os.makedirs(path)
+    except OSError:
+        if not os.path.isdir(path):
+            raise
+
 from logging import *
 
 def join_args_unicode(*args):
@@ -45,6 +54,7 @@ def get_my_logger(name=None, levelConsole=INFO, filename=None, levelFile=DEBUG, 
     logger.addHandler(ch)
 
     if filename:
+        ensure_dirs(os.path.dirname(filename))
         fh = FileHandler(filename, mode='w' if clear else 'a')
         fh.setLevel(levelFile)
         fh.setFormatter(formatter)
@@ -52,7 +62,7 @@ def get_my_logger(name=None, levelConsole=INFO, filename=None, levelFile=DEBUG, 
     return logger
 
 if __name__ == "__main__":
-    log = get_my_logger("test", levelConsole=DEBUG, filename="test.txt", clear=True)
+    log = get_my_logger("test", levelConsole=DEBUG, filename="./logtest\\t/test.txt", clear=True)
     log.info("test", 1)
     log.debug("teeeesüst2", u"teäst2b")
     try:
