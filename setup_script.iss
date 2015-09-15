@@ -22,6 +22,11 @@ SolidCompression=yes
 OutputDir=.\installer
 OutputBaseFilename={#progname}_v{#version}_setup
 
+[InstallDelete]
+; clean up any autostart links for a fresh start
+Type: files; Name: "{commonstartup}\{#progname}.lnk"
+Type: files; Name: "{userstartup}\{#progname}.lnk"
+
 [Files]
 Source: "{#sourceFolder}\{#exefile}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#sourceFolder}\*.*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
