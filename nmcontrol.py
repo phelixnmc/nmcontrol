@@ -41,11 +41,25 @@ def main():
 
     # debug mode
     app['debug'] = False
-    if '--debug=1' in sys.argv or '--main.debug=1' in sys.argv:
-        app['debug'] = True
+    for s in ['--debug=1', '--main.debug=1']:
+        while s in sys.argv:
+            app['debug'] = True
+            sys.argv.remove(s)  # do not disturb client mode option parsing with debug option
 
+    # parse command line options
+    (options, app['args']) = app['parser'].parse_args()
+
+    # determine client mode
+    app['client'] = False
+    if len(app['args']) > 0 and app['args'][0] != 'start':
+        app['client'] = True
+
+    # set up output and log
+    if app['client']:
+        common.LOGTOFILE = False
     log = common.get_logger(__name__, clear=True)
-    log.info("###################################################################################")
+    if not app['client']:
+        log.info("#######################################################")
     log.debug("DEBUG MODE")
 
     # init modules
@@ -74,9 +88,8 @@ def main():
                 except Exception as e:
                     log.exception("Exception when loading " + modType, module, ":", e)
 
-    # parse command line options
+    # structure command line options to suit modules
     # Note: There should not be plugins and services with the same name
-    (options, app['args']) = app['parser'].parse_args()
     for option, value in vars(options).items():
         if value is not None:
             tmp = option.split('.')
@@ -91,7 +104,7 @@ def main():
                     app['services'][module].conf['.'.join(tmp)] = value
 
     ###### Act as client : send rpc request ######
-    if len(app['args']) > 0 and app['args'][0] != 'start':
+    if app['client']:
         error, data = app['plugins']['rpc'].pSend(app['args'][:])
         if error is True or data['error'] is True:
             print "ERROR:", data
