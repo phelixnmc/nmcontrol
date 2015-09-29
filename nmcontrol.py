@@ -56,7 +56,7 @@ def main():
 
     # set up output and log
     if app['client']:
-        common.LOGTOFILE = False
+        common.logToFile = False
     log = common.get_logger(__name__, clear=True)
     if not app['client']:
         log.info("#######################################################")
