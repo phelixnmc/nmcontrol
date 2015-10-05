@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 
-__version__ = '0.8'
+__version__ = '0.8.1'
 
 import os
 import sys
