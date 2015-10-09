@@ -1,5 +1,5 @@
 ; also in the code
-#define version "0.8"
+#define version "0.8.1"
 
 #define sourceFolder "dist\nmcontrolwin"
 #define progname "NMControl"
