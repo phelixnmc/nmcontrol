@@ -18,8 +18,16 @@ xcopy lib dist\nmcontrol\lib /s /e /h /y
 xcopy plugin dist\nmcontrol\plugin /s /e /h /y
 xcopy service dist\nmcontrol\service /s /e /h /y
 
-rmdir dist\nmcontrol\_MEI\tk\images /s /q
-rmdir dist\nmcontrol\_MEI\tcl\tzdata /s /q
-rmdir dist\nmcontrol\_MEI\tcl\msgs /s /q
+@rem pyinstaller 2.1
+rmdir dist\nmcontrolwin\_MEI\tk\images /s /q
+rmdir dist\nmcontrolwin\_MEI\tcl\tzdata /s /q
+rmdir dist\nmcontrolwin\_MEI\tcl\msgs /s /q
+
+@rem pyinstaller 3.0
+rmdir dist\nmcontrolwin\tk\images /s /q
+rmdir dist\nmcontrolwin\tcl\tzdata /s /q
+rmdir dist\nmcontrolwin\tcl\msgs /s /q
 
 del dist\*.pyc /s /q
+
+pause
