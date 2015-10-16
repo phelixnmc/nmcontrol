@@ -104,7 +104,7 @@ class DnsServer(threading.Thread):
                     exception_rcode = 3
                     raise Exception("query is not for our domain: %s" % ".".join(question))
             except:
-                log.debug("oops", exc_info=1)
+                log.exception("dnsServer: lookup failed")
                 if not self.running:
                     continue
                 if qid:
