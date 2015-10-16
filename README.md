@@ -50,6 +50,8 @@ In `%appdata%/Nmcontrol/conf/service-dns.conf`:
 set `disable_standard_lookups` to 0 (and make sure there is no semicolon ";" in front)  
 optional: set `resolver` to your favorite DNS server if you don't like the Google default ones. (often this is a router IP address, e.g. 192.168.1.1)  
 Restart NMControl  
+You can test on the command line like this: `nslookup namecoin.org 127.0.0.1` or `nslookup nx.bit 127.0.0.1`.  
+  
 
 ```
 ; service-dns.conf example
@@ -70,6 +72,7 @@ disable_standard_lookups=0
 ; Forward standard requests to
 resolver=192.168.1.1
 ```
+
 
 ## Linux / Mac OS X
 NMControl config folder Linux: `/var/lib/nmcontrol` OR `~/.config/nmcontrol`  
