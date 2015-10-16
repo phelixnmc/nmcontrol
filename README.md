@@ -47,10 +47,29 @@ The setup file will automatically install .bit support on Windows 8 and higher. 
 ### Manual DNS config Windows < 8
 Point your primary system DNS to 127.0.0.1 (leave the secondary empty). This will redirect ALL your DNS requests to NMControl so you should to tell NMControl how to handle things.  
 In `%appdata%/Nmcontrol/conf/service-dns.conf`:  
-set `disable_standard_lookups` to 0  
+set `disable_standard_lookups` to 0 (and make sure there is no semicolon ";" in front)  
 optional: set `resolver` to your favorite DNS server if you don't like the Google default ones. (often this is a router IP address, e.g. 192.168.1.1)  
-Restart NMControl
+Restart NMControl  
 
+```
+; service-dns.conf example
+
+[dns]
+; Launch at startup
+;start=1
+
+; Listen on ip
+;host=127.0.0.1
+
+; Disable lookups for standard domains
+disable_standard_lookups=0
+
+; Listen on port
+;port=53
+
+; Forward standard requests to
+resolver=192.168.1.1
+```
 
 ## Linux / Mac OS X
 NMControl config folder Linux: `/var/lib/nmcontrol` OR `~/.config/nmcontrol`  
