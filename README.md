@@ -32,7 +32,7 @@ NMControl config folder in `%appdata%\Nmcontrol`
 Namecoin config folder in `%appdata%\Namecoin`  
 
 ### Binaries
-The setup file will automatically install .bit support on Windows 8 and higher. Only .bit DNS requests will be handled by NMControl in the default configuration. Note the system tray icon.  
+The setup file will automatically install .bit support on Windows 8 and higher. Only .bit DNS requests will be handled by NMControl in the default configuration. See below for configuration on Windows 7 and lower. Note the system tray icon.  
 
 ### Running from source: Windows
 ```
@@ -42,35 +42,6 @@ The setup file will automatically install .bit support on Windows 8 and higher. 
     
     # alternatively start console version in debug mode
     python nmcontrol.py --debug=1
-```
-
-### Manual DNS config Windows < 8
-Point your primary system DNS to 127.0.0.1 (leave the secondary empty). This will redirect ALL your DNS requests to NMControl so you should to tell NMControl how to handle things.  
-In `%appdata%/Nmcontrol/conf/service-dns.conf`:  
-set `disable_standard_lookups` to 0 (and make sure there is no semicolon ";" in front)  
-optional: set `resolver` to your favorite DNS server if you don't like the Google default ones. (often this is a router IP address, e.g. 192.168.1.1)  
-Restart NMControl  
-You can test on the command line like this: `nslookup namecoin.org 127.0.0.1` or `nslookup nx.bit 127.0.0.1`.  
-  
-
-```
-; service-dns.conf example
-
-[dns]
-; Launch at startup
-;start=1
-
-; Listen on ip
-;host=127.0.0.1
-
-; Disable lookups for standard domains
-disable_standard_lookups=0
-
-; Listen on port
-;port=53
-
-; Forward standard requests to
-resolver=192.168.1.1
 ```
 
 
@@ -97,8 +68,34 @@ Namecoin config folder OS X: `~/Library/Application Support/Namecoin`
 ```
 
 
-### DNS config on Linux / Mac OS X
-tbd
+### DNS config on Linux / Mac OS X / Manual DNS config Windows 7 and below
+Point your primary system DNS to 127.0.0.1 (leave the secondary empty). This will redirect ALL your DNS requests to NMControl so you should to tell NMControl how to handle things as follows.  
+In `%appdata%/Nmcontrol/conf/service-dns.conf`:  
+set `disable_standard_lookups` to 0 (and make sure there is no semicolon ";" in front)  
+optional: set `resolver` to your favorite DNS server if you don't like the Google default ones. (often this is a router IP address, e.g. 192.168.1.1)  
+Restart NMControl  
+You can test on the command line like this: `nslookup namecoin.org 127.0.0.1` or `nslookup nx.bit 127.0.0.1`.  
+  
+
+```
+; service-dns.conf example
+
+[dns]
+; Launch at startup
+;start=1
+
+; Listen on ip
+;host=127.0.0.1
+
+; Disable lookups for standard domains
+disable_standard_lookups=0
+
+; Listen on port
+;port=53
+
+; Forward standard requests to
+resolver=192.168.1.1
+```
 
 
 ## Developer Notes
