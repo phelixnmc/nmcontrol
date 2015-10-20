@@ -7,14 +7,14 @@ Original idea and implementation: Khal
 NMControl connects .bit domain lookups to the Namecoin client to allow for easy browsing of .bit domains. 
 It's modular design allows for easy extension via plugins.  
 
-On the first start NMControl will generate various configuration files which can be edited to change behaviour (see below for operating system specific folder locations).
+On the first start NMControl will generate various configuration files which can be edited to change behavior (see below for operating system specific folder locations). NMControl needs to be restarted for changes to the configuration files to take effect.  
 
 
 ## Prerequisites
-Fetching data from an API server or as an SPV client is in development but for now a Namecoin client needs to run and have finished downloading the blockchain. Also you need to create a `namecoin.conf` file in the Namecoin config folder like this:
+Fetching data from an API server or as an SPV client is in development but for now a Namecoin client needs to run and have finished downloading the blockchain. The Namecoin client datadir (= configuration folder) needs to be in the default location. Also you need to create a `namecoin.conf` file in the Namecoin config folder like this:
 ```
     # server=1 tells Namecoin Core GUI to accept JSON-RPC commands.
-    # By default, only RPC connections from localhost are allowed.
+    # By default, only RPC connections from localhost (the local system) are allowed.
     server=1
 
     # You must set rpcuser and rpcpassword to secure the JSON-RPC api
