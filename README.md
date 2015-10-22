@@ -1,63 +1,105 @@
-Status
-======
+# NMControl
+Copyright: 2012- Namecoin Project  
+License: LGPLv3 (unless otherwise noted in code)  
+Original idea and implementation: Khal  
+  
 
-nmcontrol : alpha, no service yet
+NMControl connects .bit domain lookups to the Namecoin client to allow for easy browsing of .bit domains. 
+It's modular design allows for easy extension via plugins.  
 
-nmcontrol-gui : none
+On the first start NMControl will generate various configuration files which can be edited to change behavior (see below for operating system specific folder locations). NMControl needs to be restarted for changes to the configuration files to take effect.  
 
-Description
-===========
 
-nmcontrol is a python software that will provide services based on namecoin like DNS, proxy, name (domain, alias, etc) registration and renewal.
+## Prerequisites
+Fetching data from an API server or as an SPV client is in development but for now a Namecoin client needs to run and have finished downloading the blockchain. The Namecoin client datadir (= configuration folder) needs to be in the default location. Also you need to create a `namecoin.conf` file in the Namecoin config folder like this:
+```
+    # server=1 tells Namecoin Core GUI to accept JSON-RPC commands.
+    # By default, only RPC connections from localhost (the local system) are allowed.
+    server=1
 
-It is composed of a daemon (nmcontrol) that communicates with namecoin and provide services, and a GUI (nmcontrol-gui) that manages the daemon.
+    # You must set rpcuser and rpcpassword to secure the JSON-RPC api
+    rpcuser=winston
+    rpcpassword=USE_THIS_STRING_TO_GET_ROBBED._JUST_HAMMER_YOUR_KEYBOARD
 
-It will allow you to :
-- create domains, alias and auto renew them
-- listen for dns requests
-- listen for socks requests
-- publish your services (in a namecoin record/namespace, services could announce themselves in the blockchain)
-- etc
+    # namehistory=1 tells Namecoin Core to enable name history at the cost of
+    # a slightly larger database (optional) (always enabled for v0.3.x client)
+    #namehistory=1
+```
 
-It is multi-threaded and designed with plugins, to enable each person to activate only what they need and what they want to share (for example, they will be able to share their DNS server).
 
-Aim of this software is to allow people to easily build things/services based on namecoin.
+## Windows
+NMControl config folder in `%appdata%\Nmcontrol`  
+Namecoin config folder in `%appdata%\Namecoin`  
 
-Features
-========
+### Binaries
+The setup file will automatically install .bit support on Windows 8 and higher. Only .bit DNS requests will be handled by NMControl in the default configuration. See below for configuration on Windows 7 and lower. Note the system tray icon.  
 
-It can currently :
-- start in background mode or normal mode
-- send/receive rpc commands to itself
-- fetch data at startup, from namecoin or from a file (then use local cached data)
-- or fetch data when asked from namecoin (then use local cached data)
-- manage plugins (start, stop, restart and minimal status, at least) + config files
-- be easily extended
+### Running from source: Windows
+```
+    pip install pywin32
+    pip install bottle
+    python nmcontrolwin.pyw  # GUI version
+    
+    # alternatively start console version in debug mode
+    python nmcontrol.py --debug=1
+```
 
-Documentation
-=============
 
-[doc/TODO.md](doc/TODO.md)
+## Linux / Mac OS X
+NMControl config folder Linux: `/var/lib/nmcontrol` OR `~/.config/nmcontrol`  
+Namecoin config folder Linux: `~/.namecoin`  
+  
+NMControl config folder OS X: `~/Library/Application Support/Nmcontrol`  
+Namecoin config folder OS X: `~/Library/Application Support/Namecoin`  
 
-[doc/INSTALL.md](doc/INSTALL.md)
+### Running from source: Linux / Mac OS X
+```
+    # install pip on Linux
+    sudo apt-get install python-pip
 
-REST API
-========
+    # install pip on Mac OS X
+    sudo easy_install pip
 
-NMControl will by default start a REST API server on 127.0.0.2:8080.  You can access it like this:
+    pip install bottle
+    python ./nmcontrol.py
 
-    http://127.0.0.2:8080/dns/getIp4/bluishcoder.bit.json
+    # alternatively start in debug mode:
+    nmcontrol.py --daemon=0 --debug=1 start
+```
 
-Which will return something like this:
 
-    {"result": "[\"198.58.109.235\"]"}
+### DNS config on Linux / Mac OS X / Manual DNS config Windows 7 and below
+Point your primary system DNS to 127.0.0.1 (leave the secondary empty). This will redirect ALL your DNS requests to NMControl so you should to tell NMControl how to handle things as follows.  
+In `%appdata%/Nmcontrol/conf/service-dns.conf`:  
+set `disable_standard_lookups` to 0 (and make sure there is no semicolon ";" in front)  
+optional: set `resolver` to your favorite DNS server if you don't like the Google default ones. (often this is a router IP address, e.g. 192.168.0.1)  
+Restart NMControl  
+You can test on the command line like this: `nslookup namecoin.org 127.0.0.1` or `nslookup nx.bit 127.0.0.1`.  
+  
 
-All non-dangerous methods should be available via REST.  Potentially dangerous methods, such as the "stop" method, are not accessible via REST for security reasons, and can only be accessed via RPC.
+```
+; service-dns.conf example
 
-When accessing a method which takes multiple arguments, the arguments should be separated by a space character (%20 in the URL).
+[dns]
+; Launch at startup
+;start=1
 
-Note that we are **not** committing to a stable API at this point, so consider the REST feature to be experimental.
+; Listen on ip
+;host=127.0.0.1
 
-Developer Notes
-============
+; Disable lookups for standard domains
+disable_standard_lookups=0
+
+; Listen on port
+;port=53
+
+; Forward standard requests to your standard DNS
+; There has to be a comma at the end!
+; e.g. lokal router ip: resolver=192.168.0.1,
+; e.g. Google DNS: resolver=8.8.8.8, 8.8.4.4,
+resolver=192.168.0.1,
+```
+
+
+## Developer Notes
 The windows build system consisting of the PyInstaller batch files "build_windows_gui.bat" and "build_windows_console.bat" as well as the InnoSetup "setup_script.iss" might be replaced with something different in the future.
