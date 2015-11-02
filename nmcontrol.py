@@ -8,6 +8,7 @@ import inspect
 import optparse
 import ConfigParser
 import traceback
+import re
 
 app = {}
 def main():
@@ -39,11 +40,11 @@ def main():
     fmt=optparse.IndentedHelpFormatter(indent_increment=4, max_help_position=40, width=cWidth-3, short_first=1 )
     app['parser'] = optparse.OptionParser(formatter=fmt,description='nmcontrol %s' % __version__)
 
-    # debug mode
+    # early debug mode (via console)
     app['debug'] = False
     for s in ['--debug=1', '--main.debug=1']:
         while s in sys.argv:
-            app['debug'] = True
+            app['debug'] = 1
             sys.argv.remove(s)  # do not disturb client mode option parsing with debug option
 
     # parse command line options
@@ -60,16 +61,19 @@ def main():
     log = common.get_logger(__name__, clear=True)
     if not app['client']:
         log.info("#######################################################")
-    log.debug("DEBUG MODE")
-
-    # init modules
-    import re
+        log.debug("DEBUG MODE 1 (set from console)")
 
     # init vars and main plugin
     app['services'] = {}
     app['plugins'] = {}
     import pluginMain
     app['plugins']['main'] = pluginMain.pluginMain('plugin')
+
+    # late debug mode (via conf file now that plugin main conf is loaded)
+    if not app['debug'] and int(app['plugins']['main'].conf['debug']):
+        app['debug'] = 2
+        log = common.get_logger(__name__, clear=False)  # get logger with debug level
+        log.debug("DEBUG MODE 2 (set via conf file)")
 
     # init service & plugins
     for modType in ['service', 'plugin']:
