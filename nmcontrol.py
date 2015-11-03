@@ -47,12 +47,13 @@ def main():
             app['debug'] = 1
             sys.argv.remove(s)  # do not disturb client mode option parsing with debug option
 
-    # parse command line options
-    (options, app['args']) = app['parser'].parse_args()
-
     # determine client mode
     app['client'] = False
-    if len(app['args']) > 0 and app['args'][0] != 'start':
+    for s in sys.argv[1:]:
+        if s.startswith('-'):
+            continue
+        if s == "start":
+            continue
         app['client'] = True
 
     # set up output and log
@@ -91,6 +92,9 @@ def main():
                     importedClass.app = app
                 except Exception as e:
                     log.exception("Exception when loading " + modType, module, ":", e)
+
+    # parse command line args now that modules are loaded
+    (options, app['args']) = app['parser'].parse_args()
 
     # structure command line options to suit modules
     # Note: There should not be plugins and services with the same name
