@@ -62,10 +62,13 @@ Unfortunately we currently need to be started privileged with sudo so that we ca
     sudo easy_install pip
 
     sudo pip install bottle
+    
+    git clone https://github.com/namecoin/nmcontrol/
+    cd nmcontrol
     sudo python ./nmcontrol.py
 
     # alternatively start in debug mode:
-    sudo nmcontrol.py --daemon=0 --debug=1 start
+    sudo python nmcontrol.py --daemon=0 --debug=1 start
 ```
 
 
