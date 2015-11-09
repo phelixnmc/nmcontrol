@@ -53,6 +53,7 @@ NMControl config folder OS X: `~/Library/Application Support/Nmcontrol`
 Namecoin config folder OS X: `~/Library/Application Support/Namecoin`  
 
 ### Running from source: Linux / Mac OS X
+Unfortunately we currently need to be started privileged with sudo so that we can open the local DNS port.  
 ```
     # install pip on Linux
     sudo apt-get install python-pip
@@ -60,11 +61,14 @@ Namecoin config folder OS X: `~/Library/Application Support/Namecoin`
     # install pip on Mac OS X
     sudo easy_install pip
 
-    pip install bottle
-    python ./nmcontrol.py
+    sudo pip install bottle
+    
+    git clone https://github.com/namecoin/nmcontrol/
+    cd nmcontrol
+    sudo python ./nmcontrol.py
 
     # alternatively start in debug mode:
-    nmcontrol.py --daemon=0 --debug=1 start
+    sudo python nmcontrol.py --daemon=0 --debug=1 start
 ```
 
 
