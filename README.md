@@ -77,7 +77,7 @@ Unfortunately we currently need to be started privileged with sudo so that we ca
 Point your primary system DNS to 127.0.0.1 (leave the secondary empty). This will redirect ALL your DNS requests to NMControl so you should to tell NMControl how to handle things as follows.  
 In `%appdata%/Nmcontrol/conf/service-dns.conf`:  
 set `disable_standard_lookups` to 0 (and make sure there is no semicolon ";" in front)  
-optional: set `resolver` to your favorite DNS server if you don't like the Google default ones. (often this is a router IP address, e.g. 192.168.0.1)  
+optional: set `resolver` to your favorite DNS server if you don't like the Google default ones. (often this is a router IP address, e.g. 192.168.0.1). ; There has to be a comma at the end!  
 Restart NMControl  
 You can test on the command line like this: `nslookup namecoin.org 127.0.0.1` or `nslookup nx.bit 127.0.0.1`.  
   
