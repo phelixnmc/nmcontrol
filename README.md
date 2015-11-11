@@ -11,7 +11,8 @@ On the first start NMControl will generate various configuration files which can
 
 
 ## Prerequisites
-Fetching data from an API server or as an SPV client is in development but for now a Namecoin client needs to run and have finished downloading the blockchain. The Namecoin client datadir (= configuration folder) needs to be in the default location. Also you need to create a `namecoin.conf` file in the Namecoin config folder like this:
+Fetching data from an API server or as an SPV client is in development but for now a Namecoin client needs to run and have finished downloading the blockchain. The Namecoin client datadir (= configuration folder) needs to be in the default location. Also you need to create a `namecoin.conf` file in the Namecoin config folder (with a custom password) like below. Restart the client afterwards.  
+
 ```
     # server=1 tells Namecoin Core GUI to accept JSON-RPC commands.
     # By default, only RPC connections from localhost (the local system) are allowed.
