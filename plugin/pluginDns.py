@@ -56,6 +56,7 @@ class pluginDns(plugin.PluginThread):
         'getIp4':    [1, 1, '<domain>', 'Get a list of IPv4 for the domain'],
         'getIp6':    [1, 1, '<domain>', 'Get a list of IPv6 for the domain'],
         'getOnion':    [1, 1, '<domain>', 'Get the .onion for the domain'],
+        'getIpfs':    [1, 1, '<domain>', 'Get the ipfs address for the domain'],
         'getI2p':    [1, 1, '<domain>', 'Get the i2p config for the domain'],
         'getI2p_b32':    [1, 1, '<domain>', 'Get the i2p base32 config for the domain'],
         'getFreenet':        [1, 1, '<domain>', 'Get the freenet config for the domain'],
@@ -109,6 +110,11 @@ class pluginDns(plugin.PluginThread):
             if not recType in ['getOnion', 'getFingerprint', 'getTls']: #ToDo: support translate
                 return '[]'
             domain = domain[:-8] + 'bit'
+        for ext in ['_ipfs.bit', 'b-i', 'ipfs', 'i']:
+            if domain.endswith(ext):
+                if not recType is 'getIpfs':
+                    return '[]'
+                domain = domain[:-len(ext)] + 'bit'
         if domain.endswith('_i2p.bit'):
             if not recType in ['getI2p', 'getI2p_b32', 'getFingerprint', 'getTls']: #ToDo: support translate
                 return '[]'
@@ -162,6 +168,10 @@ class pluginDns(plugin.PluginThread):
     @plugin.public
     def getOnion(self, domain):
         return self._getRecordForRPC(domain, 'getOnion')
+
+    @plugin.public
+    def getIpfs(self, domain):
+        return self._getRecordForRPC(domain, 'getIpfs')
 
     @plugin.public
     def getI2p(self, domain):
